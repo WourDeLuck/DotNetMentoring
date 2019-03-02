@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using MessageCreator;
 
 namespace IntroWinFormsApp
 {
@@ -12,7 +13,7 @@ namespace IntroWinFormsApp
 
 		private void EnterName_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(SayHelloToUser(NameTextBox.Text));
+			MessageBox.Show(UserGreeting.GreetUser(NameTextBox.Text));
 		}
 
 		private void NameTextBox_GotFocused(object sender, EventArgs e)
