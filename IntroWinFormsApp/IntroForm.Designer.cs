@@ -69,7 +69,7 @@
 			this.Controls.Add(this.EnterName);
 			this.Controls.Add(this.NameTextBox);
 			this.Name = "IntroForm";
-			this.Text = "Form1";
+			this.Text = "IntroForm";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

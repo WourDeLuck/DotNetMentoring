@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MessageCreator;
+﻿using MessageCreator;
 using Xamarin.Forms;
 
 namespace IntroAndroidApp
@@ -19,7 +14,5 @@ namespace IntroAndroidApp
 				await DisplayAlert("Greetings", UserGreeting.GreetUser(TextEntry.Text), "OK");
 			};
 		}
-
-		private string SayHelloToUser(string name) => $"Hello, {name}!";
 	}
 }

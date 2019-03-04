@@ -10,6 +10,5 @@
         <Label Content="My name is:&#xD;&#xA;" HorizontalAlignment="Left" Margin="50,32,0,0" VerticalAlignment="Top" Width="305" Height="32"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="50,69,0,0" TextWrapping="Wrap" Text="Name" VerticalAlignment="Top" Width="264" x:Name="EntryPoint"/>
         <Button Content="Enter" HorizontalAlignment="Left" Margin="50,113,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-
     </Grid>
 </Window>

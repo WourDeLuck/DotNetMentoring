@@ -22,6 +22,4 @@ public partial class MainWindow : Gtk.Window
         dialog.Run();
         dialog.Destroy();
     }
-
-    private string SayHelloToUser(string name) => $"Hello, {name}!";
 }

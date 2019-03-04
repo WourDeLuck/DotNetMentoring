@@ -2,13 +2,20 @@
 using System.Collections.Generic;
 using MessageCreator;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.CommandLine;
 
 namespace IntroNetCoreConsoleApp
 {
+	/// <summary>
+	/// Class for the task 3.
+	/// </summary>
 	public class NameIntroduction
 	{
 		static void Main(string[] args)
+		{
+			BindArguments(args);
+		}
+
+		private static void BindArguments(string[] args)
 		{
 			var builder = new ConfigurationBuilder();
 			builder.AddCommandLine(args, new Dictionary<string, string>
@@ -21,7 +28,5 @@ namespace IntroNetCoreConsoleApp
 
 			Console.WriteLine(UserGreeting.GreetUser(name));
 		}
-
-		private static string SayHelloToUser(string name) => $"Hello, {name}!";
 	}
 }

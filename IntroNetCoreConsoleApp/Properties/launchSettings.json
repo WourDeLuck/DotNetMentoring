@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "IntroNetCoreConsoleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "-Name Jack"
+    }
+  }
+}

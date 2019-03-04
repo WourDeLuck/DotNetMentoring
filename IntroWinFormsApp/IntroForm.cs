@@ -20,7 +20,5 @@ namespace IntroWinFormsApp
 		{
 			AcceptButton = EnterName;
 		}
-
-		private string SayHelloToUser(string name) => $"Hello, {name}!";
 	}
 }
