@@ -65,7 +65,7 @@ namespace FileWatch.Tests
 			var collection = _directorySystemWatch.CreateDirectorySequence(@"Some string").ToList();
 
 			Assert.IsNotEmpty(collection);
-			Assert.AreEqual(collection.Count, 4);
+			Assert.AreEqual(collection.Count, 2);
 		}
 
 		[Test]
@@ -145,7 +145,7 @@ namespace FileWatch.Tests
 			var collection = _directorySystemWatch.CreateDirectorySequence(@"Some string").ToList();
 
 			Assert.IsNotEmpty(collection);
-			Assert.IsTrue(collection.Any(x => x.Name.Equals("")));
+			Assert.IsTrue(collection.Any(x => x.Name.Contains("Folder")));
 		}
 	}
 }
