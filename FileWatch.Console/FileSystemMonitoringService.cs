@@ -27,7 +27,7 @@ namespace FileWatch.Console
 			fileSystemWatch.FileFound += methods.FileWatch_FileFound;
 			fileSystemWatch.FilteredFileFound += methods.FileWatch_FilteredFileFound;
 
-			var collection = fileSystemWatch.CreateFileSequence(startPoint).ToList();
+			fileSystemWatch.CreateFileSequence(startPoint);
 		}
 
 		public void WatchDirectories(string startPoint, Func<DirectoryView, bool> filterAlgorithm = null)
@@ -40,7 +40,7 @@ namespace FileWatch.Console
 			directorySystemWatch.DirectoryFound += methods.DirectoryWatch_FileFound;
 			directorySystemWatch.FilteredDirectoryFound += methods.DirectoryWatch_FilteredFileFound;
 
-			var collection = directorySystemWatch.CreateDirectorySequence(startPoint).ToList();
+			directorySystemWatch.CreateDirectorySequence(startPoint);
 		}
 	}
 }

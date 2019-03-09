@@ -40,7 +40,7 @@ namespace FileWatch.Services
 		/// </summary>
 		/// <param name="path">Start point.</param>
 		/// <returns>Collection of files.</returns>
-		public IEnumerable<FileView> CreateFileSequence(string path)
+		public List<FileView> CreateFileSequence(string path)
 		{
 			OnSearchStart(EventArgs.Empty);
 
@@ -53,7 +53,7 @@ namespace FileWatch.Services
 			var filterStage = _algoritm != null ? FilterContent(files) : files;
 
 			OnSearchEnd(EventArgs.Empty);
-			return filterStage;
+			return filterStage.ToList();
 		}
 		
 		/// <summary>

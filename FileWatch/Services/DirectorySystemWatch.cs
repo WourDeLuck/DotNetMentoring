@@ -40,7 +40,7 @@ namespace FileWatch.Services
 		/// </summary>
 		/// <param name="path">Start point.</param>
 		/// <returns>Collection of directories.</returns>
-		public IEnumerable<DirectoryView> CreateDirectorySequence(string path)
+		public List<DirectoryView> CreateDirectorySequence(string path)
 		{
 			OnStart();
 
@@ -53,7 +53,7 @@ namespace FileWatch.Services
 			var filterStage = _algoritm != null ? FilterContent(directories) : directories;
 
 			OnFinish();
-			return filterStage;
+			return filterStage.ToList();
 		}
 
 		/// <summary>
