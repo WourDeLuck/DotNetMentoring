@@ -31,38 +31,76 @@ namespace FileWatch.Services
 		{
 			OnStart();
 
-			var files = GetContent(path);
-			var filteredContent = FilterContent(files);
+			if (string.IsNullOrEmpty(path))
+			{
+				throw new ArgumentNullException(path);
+			}
+
+			var directories = GetContent(path);
+			var filterStage = _algoritm != null ? FilterContent(directories) : directories;
 
 			OnFinish();
-			return filteredContent;
+			return filterStage;
 		}
 
-		public IEnumerable<DirectoryView> GetContent(string path)
+		private IEnumerable<DirectoryView> GetContent(string path)
 		{
 			foreach (var folder in _fileWrapper.GetDirectories(path))
 			{
-				var fileModel = new DirectoryView(folder);
-				yield return fileModel;
+				var directoryModel = new DirectoryView(folder);
+				yield return directoryModel;
 				
 				OnDirectoryFound(new DirectoryFoundEventArgs
 				{
-					CurrentUnit = fileModel
+					CurrentUnit = directoryModel
 				});
+
+				if (!IsForDelete)
+				{
+					yield return directoryModel;
+				}
+				else
+				{
+					IsForDelete = false;
+				}
+
+				if (IsEndOfTheCollection)
+				{
+					IsEndOfTheCollection = false;
+					break;
+				}
 
 				foreach (var innerFolder in GetContent(folder))
 				{
 					yield return innerFolder;
 					OnDirectoryFound(new DirectoryFoundEventArgs
 					{
-						CurrentUnit = fileModel
+						CurrentUnit = directoryModel
 					});
+
+					if (!IsForDelete)
+					{
+						yield return directoryModel;
+					}
+					else
+					{
+						IsForDelete = false;
+					}
+
+					if (!IsEndOfTheCollection) continue;
+					IsEndOfTheCollection = false;
+					break;
 				}
 			}
 		}
 
-		public IEnumerable<DirectoryView> FilterContent(IEnumerable<DirectoryView> files)
+		private IEnumerable<DirectoryView> FilterContent(IEnumerable<DirectoryView> files)
 		{
+			if (files == null)
+			{
+				throw new ArgumentException("Cannot perform filtering on an empty collection.");
+			}
+
 			var filteredCollection = files.Where(_algoritm);
 
 			foreach (var unit in filteredCollection)
@@ -73,6 +111,15 @@ namespace FileWatch.Services
 					CurrentUnit = unit,
 					FullCollection = filteredCollection
 				});
+
+				if (!IsForDelete)
+				{
+					yield return unit;
+				}
+
+				if (!IsEndOfTheCollection) continue;
+				IsEndOfTheCollection = false;
+				break;
 			}
 		}
 

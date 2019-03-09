@@ -11,7 +11,7 @@ namespace FileWatch.Services
 	{
 		public IEnumerable<string> GetFiles(string path)
 		{
-			return Directory.GetFiles(path, "", SearchOption.TopDirectoryOnly);
+			return Directory.GetFiles(path, "*.*", SearchOption.TopDirectoryOnly);
 		}
 
 		public IEnumerable<string> GetDirectories(string path)

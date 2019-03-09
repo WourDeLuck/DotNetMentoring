@@ -7,7 +7,7 @@ using FileWatch.Models;
 
 namespace FileWatch.Services
 {
-	public class FileSystemVisitor
+	public class FileSystemWatch
 	{
 		private Func<FileView, bool> _algoritm;
 		private IFileSystemWrapper _fileWrapper;
@@ -21,7 +21,7 @@ namespace FileWatch.Services
 		public event EventHandler<FileFoundEventArgs> FileFound;
 		public event EventHandler<FilteredFileFoundEventArgs> FilteredFileFound;
 
-		public FileSystemVisitor(IFileSystemWrapper fileWrapper, Func<FileView, bool> filterAlgorithm = null)
+		public FileSystemWatch(IFileSystemWrapper fileWrapper, Func<FileView, bool> filterAlgorithm = null)
 		{
 			_fileWrapper = fileWrapper;
 			_algoritm = filterAlgorithm;
@@ -31,51 +31,89 @@ namespace FileWatch.Services
 		{
 			OnSearchStart(EventArgs.Empty);
 
+			if (string.IsNullOrEmpty(path))
+			{
+				throw new ArgumentNullException(path);
+			}
+
 			var files = GetContent(path);
-			var filteredContent = FilterContent(files);
+			var filterStage = _algoritm != null ? FilterContent(files) : files;
 
 			OnSearchEnd(EventArgs.Empty);
-			return filteredContent;
+			return filterStage;
 		}
 
-		public IEnumerable<FileView> GetContent(string path)
+		private IEnumerable<FileView> GetContent(string path)
 		{
 			foreach (var file in _fileWrapper.GetFiles(path))
 			{
 				var fileModel = new FileView(file);
-				yield return fileModel;
-;
+
 				OnFileFound(new FileFoundEventArgs
 				{
 					CurrentUnit = fileModel
 				});
+
+				if (!IsForDelete)
+				{
+					yield return fileModel;
+				}
+				else
+				{
+					IsForDelete = false;
+				}
+
+				if (!IsEndOfTheCollection) continue;
+				IsEndOfTheCollection = false;
+				break;
 			}
 
 			foreach (var folder in _fileWrapper.GetDirectories(path))
 			{
 				foreach (var file in GetContent(folder))
 				{
-					yield return file;
 					OnFileFound(new FileFoundEventArgs
 					{
 						CurrentUnit = file
 					});
+
+					if (!IsForDelete)
+					{
+						yield return file;
+					}
+
+					if (!IsEndOfTheCollection) continue;
+					IsEndOfTheCollection = false;
+					break;
 				}
 			}
 		}
 
-		public IEnumerable<FileView> FilterContent(IEnumerable<FileView> files)
+		private IEnumerable<FileView> FilterContent(IEnumerable<FileView> files)
 		{
+			if (files == null)
+			{
+				throw new ArgumentException("Cannot perform filtering on an empty collection.");
+			}
+
 			var filteredCollection = files.Where(_algoritm);
 
 			foreach (var unit in filteredCollection)
 			{
-				yield return unit;
 				OnFilteredFileFound(new FilteredFileFoundEventArgs
 				{
 					CurrentUnit = unit,
 					FullCollection = filteredCollection
 				});
+
+				if (!IsForDelete)
+				{
+					yield return unit;
+				}
+
+				if (!IsEndOfTheCollection) continue;
+				IsEndOfTheCollection = false;
+				break;
 			}
 		}
 
