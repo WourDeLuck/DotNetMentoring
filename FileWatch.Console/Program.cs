@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Schema;
 using FileWatch.Services;
 using Microsoft.Extensions.Configuration;
@@ -28,11 +29,18 @@ namespace FileWatch.Console
 
 		public static void InvokeFileSystemWatcher(string startPoint)
 		{
-			if (string.IsNullOrEmpty(startPoint)) return;
-			var fileSystemMonitoring = new FileSystemMonitoringService(new FileSystemFactory(), new DirectorySystemFactory());
+			try
+			{
+				if (string.IsNullOrEmpty(startPoint)) return;
+				var fileSystemMonitoring = new FileSystemMonitoringService(new FileSystemFactory(), new DirectorySystemFactory());
 
-			fileSystemMonitoring.WatchFiles(startPoint);
-			fileSystemMonitoring.WatchDirectories(startPoint);
+				fileSystemMonitoring.WatchFiles(startPoint);
+				fileSystemMonitoring.WatchDirectories(startPoint);
+			}
+			catch (Exception e)
+			{
+				System.Console.WriteLine(e.Message);
+			}
 		}
 	}
 }
