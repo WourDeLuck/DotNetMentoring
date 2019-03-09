@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DirectorySystemWatchTests.cs" />
     <Compile Include="EventTestMethods.cs" />
     <Compile Include="FileSystemWatchTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

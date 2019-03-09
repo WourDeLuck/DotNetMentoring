@@ -48,7 +48,6 @@ namespace FileWatch.Services
 			foreach (var folder in _factory.GetFileSystemContent(path))
 			{
 				var directoryModel = new DirectoryView(folder);
-				yield return directoryModel;
 				
 				OnDirectoryFound(new DirectoryFoundEventArgs
 				{
@@ -83,7 +82,6 @@ namespace FileWatch.Services
 
 			foreach (var unit in filteredCollection)
 			{
-				yield return unit;
 				OnFilteredDirectoryFound(new FilteredDirectoryFoundArgs
 				{
 					CurrentUnit = unit,
