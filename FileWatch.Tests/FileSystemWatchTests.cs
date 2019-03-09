@@ -68,5 +68,17 @@ namespace FileWatch.Tests
 
 			Assert.Throws(typeof(ArgumentNullException), () => _fileSystemWatch.CreateFileSequence(str));
 		}
+
+		[Test]
+		public void FileSystemWatch_WithFilterCondition()
+		{
+			_fileSystemWatch = new FileSystemWatch(_mockFileSystem.Object, x => x.Extension.Equals("mp3"));
+			_mockFileSystem.Setup(x => x.GetFiles(It.IsAny<string>())).Returns(_predefinedFileCollection);
+			_mockFileSystem.Setup(x => x.GetDirectories(It.IsAny<string>())).Returns(_predefinedDirectoryCollection);
+
+			var collection = _fileSystemWatch.CreateFileSequence(@"Some string");
+
+			Assert.IsNotEmpty(collection);
+		}
     }
 }
