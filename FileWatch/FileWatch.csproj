@@ -49,11 +49,12 @@
     <Compile Include="Events\FilteredDirectoryFoundArgs.cs" />
     <Compile Include="Events\FilteredFileFoundEventArgs.cs" />
     <Compile Include="Initializers\SimpleInjectorInitializer.cs" />
-    <Compile Include="Interfaces\IFileSystemWrapper.cs" />
+    <Compile Include="Interfaces\ISystemFactory.cs" />
     <Compile Include="Models\DirectoryView.cs" />
     <Compile Include="Models\FileView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\FileSystemWrapper.cs" />
+    <Compile Include="Services\DirectorySystemFactory.cs" />
+    <Compile Include="Services\FileSystemFactory.cs" />
     <Compile Include="Services\DirectorySystemWatch.cs" />
     <Compile Include="Services\FileSystemWatch.cs" />
   </ItemGroup>

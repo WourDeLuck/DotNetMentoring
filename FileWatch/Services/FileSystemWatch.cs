@@ -10,7 +10,7 @@ namespace FileWatch.Services
 	public class FileSystemWatch
 	{
 		private Func<FileView, bool> _algoritm;
-		private IFileSystemWrapper _fileWrapper;
+		private ISystemFactory _factory;
 
 		public bool IsForDelete { get; set; }
 
@@ -21,9 +21,9 @@ namespace FileWatch.Services
 		public event EventHandler<FileFoundEventArgs> FileFound;
 		public event EventHandler<FilteredFileFoundEventArgs> FilteredFileFound;
 
-		public FileSystemWatch(IFileSystemWrapper fileWrapper, Func<FileView, bool> filterAlgorithm = null)
+		public FileSystemWatch(ISystemFactory fileWrapper, Func<FileView, bool> filterAlgorithm = null)
 		{
-			_fileWrapper = fileWrapper;
+			_factory = fileWrapper;
 			_algoritm = filterAlgorithm;
 		}
 
@@ -45,7 +45,7 @@ namespace FileWatch.Services
 
 		private IEnumerable<FileView> GetContent(string path)
 		{
-			foreach (var file in _fileWrapper.GetFiles(path))
+			foreach (var file in _factory.GetFileSystemContent(path))
 			{
 				var fileModel = new FileView(file);
 
@@ -63,26 +63,8 @@ namespace FileWatch.Services
 					IsForDelete = false;
 				}
 
-				if (!IsEndOfTheCollection) continue;
-				IsEndOfTheCollection = false;
-				break;
-			}
-
-			foreach (var folder in _fileWrapper.GetDirectories(path))
-			{
-				foreach (var file in GetContent(folder))
+				if (IsEndOfTheCollection)
 				{
-					OnFileFound(new FileFoundEventArgs
-					{
-						CurrentUnit = file
-					});
-
-					if (!IsForDelete)
-					{
-						yield return file;
-					}
-
-					if (!IsEndOfTheCollection) continue;
 					IsEndOfTheCollection = false;
 					break;
 				}

@@ -12,7 +12,7 @@ namespace FileWatch.Console
 	{
 		static void Main(string[] args)
 		{
-			FileSystemWatch fs = new FileSystemWatch(new FileSystemWrapper(), y => !y.Name.Contains("5"));
+			FileSystemWatch fs = new FileSystemWatch(new FileSystemFactory(), y => !y.Name.Contains("5"));
 			fs.Start += Event_Start;
 			fs.Finish += Event_End;
 			fs.FilteredFileFound += Event_DelteElement;

@@ -18,7 +18,7 @@ namespace FileWatch.Initializers
 			_container = new Container();
 
 			// 2. Configure the container (register)
-			_container.Register<IFileSystemWrapper, FileSystemWrapper>();
+			_container.Register<ISystemFactory, FileSystemFactory>();
 
 			// 3. Verify your configuration
 			_container.Verify();
