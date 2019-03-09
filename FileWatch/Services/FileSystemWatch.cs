@@ -7,6 +7,9 @@ using FileWatch.Models;
 
 namespace FileWatch.Services
 {
+	/// <summary>
+	/// Watch class for files.
+	/// </summary>
 	public class FileSystemWatch
 	{
 		private Func<FileView, bool> _algoritm;
@@ -21,12 +24,22 @@ namespace FileWatch.Services
 		public event EventHandler<FileFoundEventArgs> FileFound;
 		public event EventHandler<FilteredFileFoundEventArgs> FilteredFileFound;
 
+		/// <summary>
+		/// Public constructor for the class.
+		/// </summary>
+		/// <param name="fileWrapper">Factory class.</param>
+		/// <param name="filterAlgorithm">Algorithm for additional sorting.</param>
 		public FileSystemWatch(ISystemFactory fileWrapper, Func<FileView, bool> filterAlgorithm = null)
 		{
 			_factory = fileWrapper;
 			_algoritm = filterAlgorithm;
 		}
 
+		/// <summary>
+		/// Gets all files from a start point and filters it according to user-specified instructions.
+		/// </summary>
+		/// <param name="path">Start point.</param>
+		/// <returns>Collection of files.</returns>
 		public IEnumerable<FileView> CreateFileSequence(string path)
 		{
 			OnSearchStart(EventArgs.Empty);
@@ -42,7 +55,12 @@ namespace FileWatch.Services
 			OnSearchEnd(EventArgs.Empty);
 			return filterStage;
 		}
-
+		
+		/// <summary>
+		/// Gets files from a start point.
+		/// </summary>
+		/// <param name="path">Start point.</param>
+		/// <returns>Collection of files.</returns>
 		private IEnumerable<FileView> GetContent(string path)
 		{
 			foreach (var file in _factory.GetFileSystemContent(path))
@@ -71,6 +89,11 @@ namespace FileWatch.Services
 			}
 		}
 
+		/// <summary>
+		/// Filters collection according to additional instructions.
+		/// </summary>
+		/// <param name="files">Collection to filter.</param>
+		/// <returns>Filtered collection of files.</returns>
 		private IEnumerable<FileView> FilterContent(IEnumerable<FileView> files)
 		{
 			if (files == null)
@@ -99,21 +122,37 @@ namespace FileWatch.Services
 			}
 		}
 
+		/// <summary>
+		/// Event Start invocation.
+		/// </summary>
+		/// <param name="e"></param>
 		protected virtual void OnSearchStart(EventArgs e)
 		{
 			Start?.Invoke(this, e);
 		}
 
+		/// <summary>
+		/// Event Finish invocation.
+		/// </summary>
+		/// <param name="e"></param>
 		protected virtual void OnSearchEnd(EventArgs e)
 		{
 			Finish?.Invoke(this, e);
 		}
 
+		/// <summary>
+		/// Event FileFoundInvocation.
+		/// </summary>
+		/// <param name="e"></param>
 		protected virtual void OnFileFound(FileFoundEventArgs e)
 		{
 			FileFound?.Invoke(this, e);
 		}
 
+		/// <summary>
+		/// Event FilteredFileFound invocation.
+		/// </summary>
+		/// <param name="e"></param>
 		protected virtual void OnFilteredFileFound(FilteredFileFoundEventArgs e)
 		{
 			FilteredFileFound?.Invoke(this, e);

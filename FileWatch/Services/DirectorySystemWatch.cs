@@ -7,6 +7,9 @@ using FileWatch.Models;
 
 namespace FileWatch.Services
 {
+	/// <summary>
+	/// Watch class for directories.
+	/// </summary>
 	public class DirectorySystemWatch
 	{
 		private Func<DirectoryView, bool> _algoritm;
@@ -21,13 +24,23 @@ namespace FileWatch.Services
 		public event EventHandler<DirectoryFoundEventArgs> DirectoryFound;
 		public event EventHandler<FilteredDirectoryFoundArgs> FilteredDirectoryFound;
 
+		/// <summary>
+		/// Public constructor for the class.
+		/// </summary>
+		/// <param name="fileSystemWrapper">Factory class.</param>
+		/// <param name="filterAlgorithm">Optional additional filtering instructions.</param>
 		public DirectorySystemWatch(ISystemFactory fileSystemWrapper, Func<DirectoryView, bool> filterAlgorithm = null)
 		{
 			_factory = fileSystemWrapper;
 			_algoritm = filterAlgorithm;
 		}
 
-		public IEnumerable<DirectoryView> CreateFileSequence(string path)
+		/// <summary>
+		/// Gets all directories from a start point and filters it according to user-specified instructions.
+		/// </summary>
+		/// <param name="path">Start point.</param>
+		/// <returns>Collection of directories.</returns>
+		public IEnumerable<DirectoryView> CreateDirectorySequence(string path)
 		{
 			OnStart();
 
@@ -43,6 +56,11 @@ namespace FileWatch.Services
 			return filterStage;
 		}
 
+		/// <summary>
+		/// Gets collection of folders.
+		/// </summary>
+		/// <param name="path">Start point.</param>
+		/// <returns>Collection of folders.</returns>
 		private IEnumerable<DirectoryView> GetContent(string path)
 		{
 			foreach (var folder in _factory.GetFileSystemContent(path))
@@ -71,6 +89,11 @@ namespace FileWatch.Services
 			}
 		}
 
+		/// <summary>
+		/// Filters content according to specified instructions.
+		/// </summary>
+		/// <param name="files">Collection to filter.</param>
+		/// <returns>Filtered collection.</returns>
 		private IEnumerable<DirectoryView> FilterContent(IEnumerable<DirectoryView> files)
 		{
 			if (files == null)
@@ -99,21 +122,35 @@ namespace FileWatch.Services
 			}
 		}
 
+		/// <summary>
+		/// Evens Start invocation.
+		/// </summary>
 		protected virtual void OnStart()
 		{
 			Start?.Invoke(this, EventArgs.Empty);
 		}
 
+		/// <summary>
+		/// Event Finish invocation.
+		/// </summary>
 		protected virtual void OnFinish()
 		{
 			Finish?.Invoke(this, EventArgs.Empty);
 		}
 
+		/// <summary>
+		/// Event DirectoryFound invocation.
+		/// </summary>
+		/// <param name="e"></param>
 		protected virtual void OnDirectoryFound(DirectoryFoundEventArgs e)
 		{
 			DirectoryFound?.Invoke(this, e);
 		}
 
+		/// <summary>
+		/// Event FilteredDirectoryFound invocation.
+		/// </summary>
+		/// <param name="e"></param>
 		protected virtual void OnFilteredDirectoryFound(FilteredDirectoryFoundArgs e)
 		{
 			FilteredDirectoryFound?.Invoke(this, e);

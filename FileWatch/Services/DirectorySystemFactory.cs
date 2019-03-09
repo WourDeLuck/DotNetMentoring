@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FileWatch.Interfaces;
 
 namespace FileWatch.Services
 {
+	/// <inheritdoc />
 	public class DirectorySystemFactory : ISystemFactory
 	{
-		public IEnumerable<string> GetFileSystemContent(string path)
-		{
-			return Directory.GetDirectories(path, "*", SearchOption.AllDirectories);
-		}
+		/// <inheritdoc />
+		public IEnumerable<string> GetFileSystemContent(string path) => Directory.GetDirectories(path, "*", SearchOption.AllDirectories);
 	}
 }

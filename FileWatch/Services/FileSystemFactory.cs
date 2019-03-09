@@ -4,14 +4,10 @@ using FileWatch.Interfaces;
 
 namespace FileWatch.Services
 {
-	/// <summary>
-	/// File system methods class wrapper for testing purposes.
-	/// </summary>
+	/// <inheritdoc />
 	public class FileSystemFactory : ISystemFactory
 	{
-		public IEnumerable<string> GetFileSystemContent(string path)
-		{
-			return Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
-		}
+		/// <inheritdoc />
+		public IEnumerable<string> GetFileSystemContent(string path) => Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
 	}
 }

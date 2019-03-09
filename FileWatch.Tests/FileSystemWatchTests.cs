@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using FileWatch.Interfaces;
-using FileWatch.Models;
 using FileWatch.Services;
 using NUnit.Framework;
 using Moq;

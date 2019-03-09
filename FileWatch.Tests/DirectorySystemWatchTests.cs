@@ -39,7 +39,7 @@ namespace FileWatch.Tests
 			_directorySystemWatch = new DirectorySystemWatch(_mockFileSystem.Object);
 			_mockFileSystem.Setup(x => x.GetFileSystemContent(It.IsAny<string>())).Returns(_predefinedDirectoryCollection);
 
-			var collection = _directorySystemWatch.CreateFileSequence(@"Some string").ToList();
+			var collection = _directorySystemWatch.CreateDirectorySequence(@"Some string").ToList();
 
 			Assert.IsNotNull(collection);
 			Assert.IsNotEmpty(collection);
@@ -53,7 +53,7 @@ namespace FileWatch.Tests
 		{
 			_directorySystemWatch = new DirectorySystemWatch(_mockFileSystem.Object);
 
-			Assert.Throws(typeof(ArgumentNullException), () => _directorySystemWatch.CreateFileSequence(str));
+			Assert.Throws(typeof(ArgumentNullException), () => _directorySystemWatch.CreateDirectorySequence(str));
 		}
 
 		[Test]
@@ -62,10 +62,10 @@ namespace FileWatch.Tests
 			_directorySystemWatch = new DirectorySystemWatch(_mockFileSystem.Object, x => x.Name.Contains("Folder"));
 			_mockFileSystem.Setup(x => x.GetFileSystemContent(It.IsAny<string>())).Returns(_predefinedDirectoryCollection);
 
-			var collection = _directorySystemWatch.CreateFileSequence(@"Some string").ToList();
+			var collection = _directorySystemWatch.CreateDirectorySequence(@"Some string").ToList();
 
 			Assert.IsNotEmpty(collection);
-			Assert.AreEqual(collection.Count, 2);
+			Assert.AreEqual(collection.Count, 4);
 		}
 
 		[Test]
@@ -74,7 +74,7 @@ namespace FileWatch.Tests
 			_directorySystemWatch = new DirectorySystemWatch(_mockFileSystem.Object, x => x.Name.Length < 10);
 			_mockFileSystem.Setup(x => x.GetFileSystemContent(It.IsAny<string>())).Returns(_predefinedDirectoryCollection);
 
-			var collection = _directorySystemWatch.CreateFileSequence(@"Some string").ToList();
+			var collection = _directorySystemWatch.CreateDirectorySequence(@"Some string").ToList();
 
 			Assert.IsNotEmpty(collection);
 			Assert.AreEqual(collection.Count, 6);
@@ -86,7 +86,7 @@ namespace FileWatch.Tests
 			_directorySystemWatch = new DirectorySystemWatch(_mockFileSystem.Object, x => x.ParentFolder.Contains("Whosnext"));
 			_mockFileSystem.Setup(x => x.GetFileSystemContent(It.IsAny<string>())).Returns(_predefinedDirectoryCollection);
 
-			var collection = _directorySystemWatch.CreateFileSequence(@"Some string").ToList();
+			var collection = _directorySystemWatch.CreateDirectorySequence(@"Some string").ToList();
 
 			Assert.IsNotEmpty(collection);
 			Assert.AreEqual(collection.Count, 1);
@@ -100,7 +100,7 @@ namespace FileWatch.Tests
 
 			_directorySystemWatch.DirectoryFound += EventTestMethods.Event_DirectoryFound_Stop;
 
-			var collection = _directorySystemWatch.CreateFileSequence(@"Some string").ToList();
+			var collection = _directorySystemWatch.CreateDirectorySequence(@"Some string").ToList();
 
 			Assert.IsNotEmpty(collection);
 			Assert.IsFalse(collection.Any(x => x.Name.Equals("RIP")));
@@ -114,7 +114,7 @@ namespace FileWatch.Tests
 
 			_directorySystemWatch.DirectoryFound += EventTestMethods.Event_DirectoryFound_Delete;
 
-			var collection = _directorySystemWatch.CreateFileSequence(@"Some string").ToList();
+			var collection = _directorySystemWatch.CreateDirectorySequence(@"Some string").ToList();
 
 			Assert.IsNotEmpty(collection);
 			Assert.IsFalse(collection.Any(x => x.ParentFolder.Contains("OneMoreFolder")));
@@ -128,7 +128,7 @@ namespace FileWatch.Tests
 
 			_directorySystemWatch.FilteredDirectoryFound += EventTestMethods.Event_FilteredDirectoryFound_Stop;
 
-			var collection = _directorySystemWatch.CreateFileSequence(@"Some string").ToList();
+			var collection = _directorySystemWatch.CreateDirectorySequence(@"Some string").ToList();
 
 			Assert.IsNotEmpty(collection);
 			Assert.IsFalse(collection.Any(x => x.Name.Equals("RIP")));
@@ -142,10 +142,10 @@ namespace FileWatch.Tests
 
 			_directorySystemWatch.FilteredDirectoryFound += EventTestMethods.Event_FilteredDirectoryFound_Delete;
 
-			var collection = _directorySystemWatch.CreateFileSequence(@"Some string").ToList();
+			var collection = _directorySystemWatch.CreateDirectorySequence(@"Some string").ToList();
 
 			Assert.IsNotEmpty(collection);
-			Assert.IsTrue(collection.Any(x => x.Name.Equals("OneMoreFolder")));
+			Assert.IsTrue(collection.Any(x => x.Name.Equals("")));
 		}
 	}
 }
