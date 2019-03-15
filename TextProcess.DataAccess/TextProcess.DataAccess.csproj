@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C99744AA-FDDB-45E7-BCB3-5CDAD4A951E7}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>TextProcess</RootNamespace>
-    <AssemblyName>TextProcess</AssemblyName>
+    <ProjectGuid>{EDD5D4FB-55FF-45A0-98B3-9D7DC66C45AC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TextProcess.DataAccess</RootNamespace>
+    <AssemblyName>TextProcess.DataAccess</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,17 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="IoReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextProcesser.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Arithmetics\Arithmetics.csproj">
-      <Project>{99624620-0c78-4484-abd2-11a430c8a327}</Project>
-      <Name>Arithmetics</Name>
+    <ProjectReference Include="..\TextProcess.Common\TextProcess.Common.csproj">
+      <Project>{3bd82093-9c93-46cf-8501-9d2a180b5a5f}</Project>
+      <Name>TextProcess.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TextProcess
+namespace TextProcess.Console
 {
 	class Program
 	{
@@ -18,18 +18,18 @@ namespace TextProcess
 			{
 				var textProcesser = new TextProcesser();
 
-				Console.WriteLine("Enter some text:");
-				var originalString = Console.ReadLine();
+				System.Console.WriteLine("Specify file path:");
+				var originalString = System.Console.ReadLine();
 
-				Console.WriteLine($"First symbol: {textProcesser.GetFirstLetterOfString(originalString)}");
+				System.Console.WriteLine($"First symbol: {textProcesser.GetFirstLetterOfString(originalString)}");
 			}
 			catch (Exception e) when (e is ArgumentNullException || e is ArgumentException)
 			{
-				Console.WriteLine(e.Message);
+				System.Console.WriteLine(e.Message);
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"Something went wrong: {e.Message}");
+				System.Console.WriteLine($"Something went wrong: {e.Message}");
 			}
 		}
 	}

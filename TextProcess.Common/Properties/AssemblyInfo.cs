@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Arithmetics")]
+[assembly: AssemblyTitle("TextProcess.Common")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EPAM Systems")]
-[assembly: AssemblyProduct("Arithmetics")]
+[assembly: AssemblyProduct("TextProcess.Common")]
 [assembly: AssemblyCopyright("Copyright © EPAM Systems 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("99624620-0c78-4484-abd2-11a430c8a327")]
+[assembly: Guid("3bd82093-9c93-46cf-8501-9d2a180b5a5f")]
 
 // Version information for an assembly consists of the following four values:
 //

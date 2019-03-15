@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TextProcess")]
+[assembly: AssemblyTitle("TextProcess.Console")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EPAM Systems")]
-[assembly: AssemblyProduct("TextProcess")]
+[assembly: AssemblyProduct("TextProcess.Console")]
 [assembly: AssemblyCopyright("Copyright © EPAM Systems 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("c99744aa-fddb-45e7-bcb3-5cdad4a951e7")]
+[assembly: Guid("5e7861c6-780e-4b2c-abbf-9b79817e42a7")]
 
 // Version information for an assembly consists of the following four values:
 //

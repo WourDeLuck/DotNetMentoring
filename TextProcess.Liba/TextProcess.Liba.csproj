@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{99624620-0C78-4484-ABD2-11A430C8A327}</ProjectGuid>
+    <ProjectGuid>{EC047BCA-8F11-45C6-960D-563DCC4DE34A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Arithmetics</RootNamespace>
-    <AssemblyName>Arithmetics</AssemblyName>
+    <RootNamespace>TextProcess.Liba</RootNamespace>
+    <AssemblyName>TextProcess.Liba</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,8 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Guard.cs" />
-    <Compile Include="StringConverter.cs" />
+    <Compile Include="TextProcesser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
