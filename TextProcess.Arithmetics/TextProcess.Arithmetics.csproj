@@ -44,5 +44,11 @@
     <Compile Include="StringConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TextProcess.Common\TextProcess.Common.csproj">
+      <Project>{3bd82093-9c93-46cf-8501-9d2a180b5a5f}</Project>
+      <Name>TextProcess.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

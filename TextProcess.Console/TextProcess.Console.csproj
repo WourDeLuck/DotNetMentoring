@@ -49,5 +49,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TextProcess.DataAccess\TextProcess.DataAccess.csproj">
+      <Project>{EDD5D4FB-55FF-45A0-98B3-9D7DC66C45AC}</Project>
+      <Name>TextProcess.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TextProcess.Liba\TextProcess.Liba.csproj">
+      <Project>{EC047BCA-8F11-45C6-960D-563DCC4DE34A}</Project>
+      <Name>TextProcess.Liba</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

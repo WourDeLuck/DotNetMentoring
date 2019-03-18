@@ -1,4 +1,5 @@
 ﻿using System;
+using TextProcess.Liba;
 
 namespace TextProcess.Console
 {
@@ -6,10 +7,7 @@ namespace TextProcess.Console
 	{
 		static void Main(string[] args)
 		{
-			while (true)
-			{
-				ReadAndGet();
-			}
+			ReadAndGet();
 		}
 
 		public static void ReadAndGet()
@@ -19,13 +17,14 @@ namespace TextProcess.Console
 				var textProcesser = new TextProcesser();
 
 				System.Console.WriteLine("Specify file path:");
-				var originalString = System.Console.ReadLine();
+				var filePath = System.Console.ReadLine();
 
-				System.Console.WriteLine($"First symbol: {textProcesser.GetFirstLetterOfString(originalString)}");
-			}
-			catch (Exception e) when (e is ArgumentNullException || e is ArgumentException)
-			{
-				System.Console.WriteLine(e.Message);
+				var collection = textProcesser.ReadTextAndReturnChars(filePath);
+
+				foreach (var item in collection)
+				{
+					System.Console.WriteLine($"First symbol: {item}");
+				}
 			}
 			catch (Exception e)
 			{

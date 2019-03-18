@@ -44,5 +44,11 @@
     <Compile Include="TextProcesser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TextProcess.DataAccess\TextProcess.DataAccess.csproj">
+      <Project>{EDD5D4FB-55FF-45A0-98B3-9D7DC66C45AC}</Project>
+      <Name>TextProcess.DataAccess</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
