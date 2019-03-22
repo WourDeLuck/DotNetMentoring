@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using TextProcess.Common;
 
 namespace TextProcess.Arithmetics
@@ -8,17 +9,20 @@ namespace TextProcess.Arithmetics
 	/// <summary>
 	/// Class converter.
 	/// </summary>
-	public class StringConverter
-    {
+	public static class StringConverter
+	{
+		public static readonly int DecadeForMultiply = 10;
+		public static readonly int ChunkSize = 15;
+
 		/// <summary>
 		/// Converts string to int.
 		/// </summary>
 		/// <param name="text">Specified string.</param>
 		/// <returns>Converted integer.</returns>
-		public int ConvertToInt(string text)
+		public static int ConvertToInt(this string text)
 	    {
-			Guard.CheckIfConvertableToNumber(text);
-			Guard.CheckIfInt(text);
+			Guard.ThrowIfConvertibleToNumber(text);
+			Guard.ThrowIfInt(text);
 		    return (int) PerformCalculations(text);
 	    }
 
@@ -27,10 +31,10 @@ namespace TextProcess.Arithmetics
 		/// </summary>
 		/// <param name="text">Specified string.</param>
 		/// <returns>Converted long.</returns>
-	    public long ConvertToLong(string text)
+	    public static long ConvertToLong(this string text)
 	    {
-			Guard.CheckIfConvertableToNumber(text);
-			Guard.CheckIfLong(text);
+			Guard.ThrowIfConvertibleToNumber(text);
+			Guard.ThrowIfLong(text);
 		    return (long) PerformCalculations(text);
 	    }
 
@@ -39,28 +43,27 @@ namespace TextProcess.Arithmetics
 		/// </summary>
 		/// <param name="text"></param>
 		/// <returns></returns>
-	    private double PerformCalculations(string text)
-	    {
-		    var decadeForMultiply = 10;
-			var charArr = DeleteMinus(text.ToCharArray());
+	    private static BigInteger PerformCalculations(string text)
+		{
+			var charArr = text.ToCharArray();
+			var editedArray = charArr.DeleteNegativeAndPositiveCharacters();
 
-			var finalNumber = charArr
-				.Select((t, i) => (t - '0') * Math.Pow(decadeForMultiply, charArr.Length - 1 - i))
-				.Sum();
+			var number = editedArray
+				.Select((t, i) => (t - '0') * BigInteger.Pow(DecadeForMultiply, editedArray.Length - 1 - i))
+				.Aggregate((currSum, item) => currSum + item);
 
-		    return text.Contains('-') ? finalNumber * -1 : finalNumber;
-	    }
+			return text.Contains('-') ? number * -1 : number;
+		}
 
 		/// <summary>
 		/// Deletes minus from an array.
 		/// </summary>
 		/// <param name="array"></param>
 		/// <returns></returns>
-	    private char[] DeleteMinus(char[] array)
+	    private static char[] DeleteNegativeAndPositiveCharacters(this IEnumerable<char> array)
 	    {
-		    var list = new List<char>(array);
-		    list.Remove('-');
-		    list.Remove('+');
+		    var list = array.ToList();
+		    list.RemoveAll(x => x == '-' || x == '+');
 		    return list.ToArray();
 	    }
 	}

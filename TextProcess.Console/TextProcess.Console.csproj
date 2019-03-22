@@ -43,6 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\NumberTypeEnum.cs" />
+    <Compile Include="LibWrappers\StringConverterCaller.cs" />
+    <Compile Include="LibWrappers\TextProcessorCaller.cs" />
+    <Compile Include="Menu\MenuCreator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -50,6 +54,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TextProcess.Arithmetics\TextProcess.Arithmetics.csproj">
+      <Project>{8c27bf72-834f-4244-baf7-1687011946f7}</Project>
+      <Name>TextProcess.Arithmetics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TextProcess.DataAccess\TextProcess.DataAccess.csproj">
       <Project>{EDD5D4FB-55FF-45A0-98B3-9D7DC66C45AC}</Project>
       <Name>TextProcess.DataAccess</Name>

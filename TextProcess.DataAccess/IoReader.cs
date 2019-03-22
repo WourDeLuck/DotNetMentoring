@@ -15,7 +15,7 @@ namespace TextProcess.DataAccess
 		/// <returns>Text of the file.</returns>
 	    public string ReadFile(string path)
 	    {
-			Guard.CheckPathExistence(path);
+			Guard.ThrowPathExistence(path);
 
 		    return File.ReadAllText(path);
 	    }

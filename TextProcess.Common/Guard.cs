@@ -14,7 +14,7 @@ namespace TextProcess.Common
 		/// Checks if specified path exists.
 		/// </summary>
 		/// <param name="path">Path to the file.</param>
-		public static void CheckPathExistence(string path)
+		public static void ThrowPathExistence(string path)
 		{
 			if (!File.Exists(path))
 			{
@@ -23,22 +23,10 @@ namespace TextProcess.Common
 		}
 
 		/// <summary>
-		/// Check if string is numeric.
-		/// </summary>
-		/// <param name="text">Specified text.</param>
-		public static void CheckIfStringIsNumeric(string text)
-		{
-			if (!text.All(char.IsNumber))
-			{
-				throw new ArgumentException("Specified string is not a number", text);
-			}
-		}
-
-		/// <summary>
 		/// Checks if string can be converted to a number.
 		/// </summary>
 		/// <param name="text">Specified text.</param>
-		public static void CheckIfConvertableToNumber(string text)
+		public static void ThrowIfConvertibleToNumber(string text)
 		{
 			if (!Regex.IsMatch(text, "^[+-]?\\d*$"))
 			{
@@ -50,7 +38,7 @@ namespace TextProcess.Common
 		/// Checks if string can be converted to int.
 		/// </summary>
 		/// <param name="text">Specified text.</param>
-		public static void CheckIfInt(string text)
+		public static void ThrowIfInt(string text)
 		{
 			var maxValueLength = int.MaxValue.ToString().Length;
 			var charArr = text.ToCharArray();
@@ -65,7 +53,7 @@ namespace TextProcess.Common
 		/// Checks if string can be converted to long.
 		/// </summary>
 		/// <param name="text">Specified text.</param>
-		public static void CheckIfLong(string text)
+		public static void ThrowIfLong(string text)
 		{
 			var maxValueLength = long.MaxValue.ToString().Length;
 			var charArr = text.ToCharArray();
@@ -88,7 +76,7 @@ namespace TextProcess.Common
 
 			if (arr.Length > maxLength)
 			{
-				throw new IndexOutOfRangeException("Unable to convert string to integer: Value is too big.");
+				throw new IndexOutOfRangeException("Unable to convert string to number: Amount of numbers is bigger than maximum possible.");
 			}
 		}
 
@@ -96,17 +84,20 @@ namespace TextProcess.Common
 		/// Compares two arrays by their values.
 		/// </summary>
 		/// <param name="originalArr"></param>
-		/// <param name="arrForCompar"></param>
-		private static void ValueCheck(char[] originalArr, char[] arrForCompar)
+		/// <param name="arrForCompare"></param>
+		private static void ValueCheck(char[] originalArr, char[] arrForCompare)
 		{
 			var listComp = originalArr.ToList();
 			listComp.Remove('-');
 
-			if (listComp.Count == arrForCompar.Length)
+			if (listComp.Count != arrForCompare.Length) return;
+			for (var i = 0; i < listComp.Count; i++)
 			{
-				if (listComp.Where((t, i) => t - '0' > arrForCompar[i] - '0').Any())
+				if (listComp[i] - '0' == arrForCompare[i] - '0') continue;
+				if (listComp[i] - '0' < arrForCompare[i] - '0') break;
+				if (listComp[i] - '0' > arrForCompare[i] - '0')
 				{
-					throw new IndexOutOfRangeException("Unable to convert string to number: Value is too big.");
+					throw new IndexOutOfRangeException("Unable to convert string to number: Value is out of range.");
 				}
 			}
 		}
