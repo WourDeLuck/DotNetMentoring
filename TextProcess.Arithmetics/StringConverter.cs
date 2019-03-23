@@ -54,17 +54,5 @@ namespace TextProcess.Arithmetics
 
 			return text.Contains('-') ? number * -1 : number;
 		}
-
-		/// <summary>
-		/// Deletes minus from an array.
-		/// </summary>
-		/// <param name="array"></param>
-		/// <returns></returns>
-	    private static char[] DeleteNegativeAndPositiveCharacters(this IEnumerable<char> array)
-	    {
-		    var list = array.ToList();
-		    list.RemoveAll(x => x == '-' || x == '+');
-		    return list.ToArray();
-	    }
 	}
 }

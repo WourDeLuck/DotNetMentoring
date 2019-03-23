@@ -12,22 +12,29 @@ namespace TextProcess.Console.Menu
 			System.Console.WriteLine("2. Convert string to a number");
 			System.Console.WriteLine("3. Exit");
 
-			var value = Convert.ToInt32(System.Console.ReadLine());
+			var success = int.TryParse(System.Console.ReadLine(), out var value);
 
-			switch (value)
+			if (!success)
 			{
-				case 1:
-					TextProcessorCaller.ReadAndGet();
-					break;
-				case 2:
-					ConvertToNumberMenu();
-					break;
-				case 3:
-					Environment.Exit(0);
-					break;
-				default:
-					System.Console.WriteLine("Enter a correct value.");
-					break;
+				System.Console.WriteLine("Enter a correct value.");
+			}
+			else
+			{
+				switch (value)
+				{
+					case 1:
+						TextProcessorCaller.ReadAndGet();
+						break;
+					case 2:
+						ConvertToNumberMenu();
+						break;
+					case 3:
+						Environment.Exit(0);
+						break;
+					default:
+						System.Console.WriteLine("Enter a correct value.");
+						break;
+				}
 			}
 		}
 
@@ -38,23 +45,30 @@ namespace TextProcess.Console.Menu
 			System.Console.WriteLine("2. Convert to long");
 			System.Console.WriteLine("3. Back");
 
-			var value = Convert.ToInt32(System.Console.ReadLine());
+			var success = int.TryParse(System.Console.ReadLine(), out var value);
 
-			switch (value)
+			if (!success)
 			{
-				case 1:
-					StringConverterCaller.ConvertToNumber(NumberTypeEnum.Int);
-					break;
-				case 2:
-					StringConverterCaller.ConvertToNumber(NumberTypeEnum.Long);
-					break;
-				case 3:
-					System.Console.Clear();
-					CommonMenu();
-					break;
-				default:
-					System.Console.WriteLine("Enter a correct value.");
-					break;
+				System.Console.WriteLine("Enter a correct value.");
+			}
+			else
+			{
+				switch (value)
+				{
+					case 1:
+						StringConverterCaller.ConvertToNumber(NumberTypeEnum.Int);
+						break;
+					case 2:
+						StringConverterCaller.ConvertToNumber(NumberTypeEnum.Long);
+						break;
+					case 3:
+						System.Console.Clear();
+						CommonMenu();
+						break;
+					default:
+						System.Console.WriteLine("Enter a correct value.");
+						break;
+				}
 			}
 		}
 	}

@@ -40,13 +40,11 @@ namespace TextProcess.Common
 		/// <param name="text">Specified text.</param>
 		public static void ThrowIfInt(string text)
 		{
-			var maxValueLength = int.MaxValue.ToString().Length;
+			var rangeValueArr = text.Contains('-') ? int.MinValue.ToString().ToCharArray() : int.MaxValue.ToString().ToCharArray();
 			var charArr = text.ToCharArray();
 
-			RangeCheck(charArr, maxValueLength);
-
-			var maxValArr = int.MaxValue.ToString().ToCharArray();
-			ValueCheck(charArr, maxValArr);
+			RangeCheck(charArr, rangeValueArr.DeleteNegativeAndPositiveCharacters().Length);
+			ValueCheck(charArr, rangeValueArr);
 		}
 
 		/// <summary>
@@ -55,13 +53,11 @@ namespace TextProcess.Common
 		/// <param name="text">Specified text.</param>
 		public static void ThrowIfLong(string text)
 		{
-			var maxValueLength = long.MaxValue.ToString().Length;
+			var rangeValueArr = text.Contains('-') ? long.MinValue.ToString().ToCharArray() : long.MaxValue.ToString().ToCharArray();
 			var charArr = text.ToCharArray();
 
-			RangeCheck(charArr, maxValueLength);
-
-			var maxValArr = long.MaxValue.ToString().ToCharArray();
-			ValueCheck(charArr, maxValArr);
+			RangeCheck(charArr, rangeValueArr.DeleteNegativeAndPositiveCharacters().Length);
+			ValueCheck(charArr, rangeValueArr);
 		}
 
 		/// <summary>
@@ -71,10 +67,9 @@ namespace TextProcess.Common
 		/// <param name="maxLength"></param>
 		private static void RangeCheck(char[] arr, int maxLength)
 		{
-			var listOfChars = arr.ToList();
-			listOfChars.Remove('-');
+			var listOfChars = arr.DeleteNegativeAndPositiveCharacters().ToList();
 
-			if (arr.Length > maxLength)
+			if (listOfChars.Count > maxLength)
 			{
 				throw new IndexOutOfRangeException("Unable to convert string to number: Amount of numbers is bigger than maximum possible.");
 			}
@@ -87,15 +82,15 @@ namespace TextProcess.Common
 		/// <param name="arrForCompare"></param>
 		private static void ValueCheck(char[] originalArr, char[] arrForCompare)
 		{
-			var listComp = originalArr.ToList();
-			listComp.Remove('-');
+			var numericOriginalArr = originalArr.DeleteNegativeAndPositiveCharacters().ToList();
+			var numericArrForCompare = arrForCompare.DeleteNegativeAndPositiveCharacters().ToList();
 
-			if (listComp.Count != arrForCompare.Length) return;
-			for (var i = 0; i < listComp.Count; i++)
+			if (numericOriginalArr.Count != numericArrForCompare.Count) return;
+			for (var i = 0; i < numericOriginalArr.Count; i++)
 			{
-				if (listComp[i] - '0' == arrForCompare[i] - '0') continue;
-				if (listComp[i] - '0' < arrForCompare[i] - '0') break;
-				if (listComp[i] - '0' > arrForCompare[i] - '0')
+				if (numericOriginalArr[i] - '0' == numericArrForCompare[i] - '0') continue;
+				if (numericOriginalArr[i] - '0' < numericArrForCompare[i] - '0') break;
+				if (numericOriginalArr[i] - '0' > numericArrForCompare[i] - '0')
 				{
 					throw new IndexOutOfRangeException("Unable to convert string to number: Value is out of range.");
 				}
