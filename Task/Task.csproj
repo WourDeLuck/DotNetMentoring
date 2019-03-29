@@ -51,6 +51,7 @@
     <Compile Include="Data\Order.cs" />
     <Compile Include="Data\Product.cs" />
     <Compile Include="Data\Supplier.cs" />
+    <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="LinqSamples.cs" />
     <Compile Include="ObjectDumper.cs" />
     <Compile Include="Program.cs" />

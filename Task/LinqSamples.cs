@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using SampleSupport;
 using Task.Data;
+using Task.Extensions;
 
 // Version Mad01
 
@@ -43,10 +44,7 @@ namespace SampleQueries
 				});
 
 				ObjectDumper.Write($"Show records under {border}");
-				foreach (var client in filteredClients)
-				{
-					ObjectDumper.Write(client);
-				}
+				filteredClients.WriteToApp();
 			}
 		}
 
@@ -72,15 +70,10 @@ namespace SampleQueries
 				});
 
 			ObjectDumper.Write("Customers and Suppliers in the same country:");
-			foreach (var sequence in customersAndSuppliersInSameCountry)
-			{
-				ObjectDumper.Write(sequence);
-			}
+			customersAndSuppliersInSameCountry.WriteToApp();
+
 			ObjectDumper.Write("Customers and Suppliers in the same city:");
-			foreach (var sequence in customersAndSuppliersInSameCity)
-			{
-				ObjectDumper.Write(sequence);
-			}
+			customersAndSuppliersInSameCity.WriteToApp();
 		}
 
 		[Category("Sup")]
@@ -98,10 +91,7 @@ namespace SampleQueries
 					TotalPrice = x.Orders.Select(c => c.Total).Sum()
 				});
 
-			foreach (var client in clients)
-			{
-				ObjectDumper.Write(client);
-			}
+			clients.WriteToApp();
 		}
 
 		[Category("Sup")]
@@ -127,9 +117,7 @@ namespace SampleQueries
 		public void Linq6()
 		{
 			var clients = dataSource.Customers
-				.Where(x => (x.PostalCode != null && x.PostalCode.All(char.IsNumber)) || 
-				(string.IsNullOrEmpty(x.Region)) ||
-				(!x.Phone.Contains('(') && !x.Phone.Contains(')')))
+				.Where(x => x.PostalCode != null && x.PostalCode.All(char.IsNumber) || string.IsNullOrEmpty(x.Region) || !x.Phone.Contains('(') && !x.Phone.Contains(')'))
 				.Select(x => new
 				{
 					x.CustomerID,
@@ -138,10 +126,62 @@ namespace SampleQueries
 					x.Phone
 				});
 
-			foreach (var client in clients)
+			clients.WriteToApp();
+		}
+
+		[Category("Sup")]
+		[Title("Where - Task 8")]
+		[Description("This sample returns grouped by the price products")]
+		public void Linq8()
+		{
+			var priceRange = new[] { 100, 50, 0 };
+
+			var grouped = dataSource.Products
+				.GroupBy(i => priceRange.First(c => c <= i.UnitPrice))
+				.Select(x => new
+				{
+					PriceRange = x.Key,
+					Products = x.Select(t => new
+					{
+						Name = t.ProductName,
+						Price = t.UnitPrice
+					}).OrderBy(j => j.Price)
+				});
+
+			foreach (var group in grouped)
 			{
-				ObjectDumper.Write(client);
+				switch (group.PriceRange)
+				{
+					case 0:
+						ObjectDumper.Write("Cheap (0-50):");
+						break;
+					case 50:
+						ObjectDumper.Write("Normal price (50-100):");
+						break;
+					case 100:
+						ObjectDumper.Write("Expensive (>100):");
+						break;
+				}
+
+				group.Products.WriteToApp();
 			}
+		}
+
+		[Category("Sup")]
+		[Title("Where - Task 9")]
+		[Description("This sample returns average income of each city and average amount of clients per city")]
+		public void Linq9()
+		{
+			var averagePricePerCity = dataSource.Customers
+				.GroupBy(x => x.City)
+				.Select(x => new
+				{
+					City = x.Key,
+					AverageIncome = x.Where(y => y.Orders.Any()).Select(y => y.Orders.Select(u => u.Total).Sum()).Average(),
+					AverageAmountOfOrders = x.Select(y => y.Orders.Length).Sum() / x.Count()
+				});
+
+			averagePricePerCity.WriteToApp();
 		}
 	}
 }
