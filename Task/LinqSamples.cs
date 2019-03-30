@@ -258,7 +258,43 @@ namespace SampleQueries
 		[Description("This sample returns average income of each city and average amount of clients per city")]
 		public void Linq10()
 		{
-			
+			var monthly = dataSource.Customers
+				.SelectMany(x => x.Orders)
+				.GroupBy(x => x.OrderDate.Month)
+				.Select(x => new
+				{
+					Month = x.Key,
+					TotalOrders = x.Count(),
+					AveragePricePerOrder = x.Select(u => u.Total).Average()
+				}).OrderBy(x => x.Month);
+
+			var annually = dataSource.Customers
+				.SelectMany(x => x.Orders)
+				.GroupBy(i => i.OrderDate.Year)
+				.Select(x => new
+				{
+					Year = x.Key,
+					TotalOrders = x.Count(),
+					AveragePricePerOrder = x.Select(u => u.Total).Average()
+				}).OrderBy(x => x.Year);
+
+			var monthlyAndAnnually = dataSource.Customers
+				.SelectMany(x => x.Orders)
+				.GroupBy(x => new {x.OrderDate.Month, x.OrderDate.Year})
+				.OrderBy(x => x.Key.Year)
+				.ThenBy(x => x.Key.Month)
+				.Select(x => new
+				{
+					Key = x.Key.ToString(),
+					TotalOrders = x.Count(),
+					AveragePricePerOrder = x.Select(u => u.Total).Average()
+				});
+
+			annually.WriteToApp();
+			ObjectDumper.Write("---------------");
+			monthly.WriteToApp();
+			ObjectDumper.Write("---------------");
+			monthlyAndAnnually.WriteToApp();
 		}
 	}
 }
