@@ -112,6 +112,28 @@ namespace SampleQueries
 		}
 
 		[Category("Sup")]
+		[Title("Where - Task 5")]
+		[Description("This sample returns a list of clients and the date of their first order sorted by year and then by month")]
+		public void Linq5()
+		{
+			var clients = dataSource.Customers.Select(x => new
+			{
+				CustomerName = x.CustomerID,
+				FirstOrder = x.Orders.OrderBy(y => y.OrderDate).Select(y => y.OrderDate).FirstOrDefault(),
+				Orders = x.Orders.OrderByDescending(g => g.Total)
+			}).OrderBy(x => x.FirstOrder.Year).ThenBy(x => x.FirstOrder.Month).ThenBy(x => x.CustomerName);
+
+			foreach (var client in clients)
+			{
+				ObjectDumper.Write(client);
+				foreach (var order in client.Orders)
+				{
+					ObjectDumper.Write(order);
+				}
+			}
+		}
+
+		[Category("Sup")]
 		[Title("Where - Task 6")]
 		[Description("This sample returns all clients with non-numeric postal code, empty region, or international phone code")]
 		public void Linq6()
@@ -127,6 +149,53 @@ namespace SampleQueries
 				});
 
 			clients.WriteToApp();
+		}
+
+		[Category("Sup")]
+		[Title("Where - Task 7")]
+		[Description("This sample returns grouped products by category, then by their availability, order last group by price")]
+		public void Linq7()
+		{
+			var products = dataSource.Products
+				.GroupBy(x => x.Category)
+				.Select(x => new
+				{
+					Category = x.Key,
+					Products = x.GroupBy(y => y.UnitsInStock > 0)
+					.Select(u => new
+					{
+						IsAvailable = u.Key,
+						MatchingProducts = u.ToList()
+					}).ToList()
+				}).ToList();
+
+			var categorySelector = products.LastOrDefault().Category;
+
+			var lastGroup = products.LastOrDefault().Products.Select(x => x.MatchingProducts.OrderBy(u => u.UnitPrice)).Select(x => new
+			{
+				IsAvailable = x.All(y => y.UnitsInStock > 0),
+				MatchingProducts = x.ToList()
+			}).ToList();
+
+			products.RemoveAll(x => x.Category == categorySelector);
+			products.Add(new
+			{
+				Category = categorySelector,
+				Products = lastGroup
+			});
+
+			foreach (var client in products)
+			{
+				ObjectDumper.Write(client.Category);
+				foreach (var av in client.Products)
+				{
+					ObjectDumper.Write(av.IsAvailable);
+					foreach (var seq in av.MatchingProducts)
+					{
+						ObjectDumper.Write(seq);
+					}
+				}
+			}
 		}
 
 		[Category("Sup")]
@@ -182,6 +251,14 @@ namespace SampleQueries
 				});
 
 			averagePricePerCity.WriteToApp();
+		}
+
+		[Category("Sup")]
+		[Title("Where - Task 10")]
+		[Description("This sample returns average income of each city and average amount of clients per city")]
+		public void Linq10()
+		{
+			
 		}
 	}
 }
