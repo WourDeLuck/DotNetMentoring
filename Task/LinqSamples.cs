@@ -36,11 +36,11 @@ namespace SampleQueries
 			foreach (var border in borders)
 			{
 				var filteredClients = dataSource.Customers
-				.Where(x => x.Orders.Select(y => y.Total).Sum() < border)
+				.Where(x => x.Orders.Sum(y => y.Total) < border)
 				.Select(x => new
 				{
 					CustomerName = x.CustomerID,
-					TotalPrice = x.Orders.Select(c => c.Total).Sum()
+					TotalPrice = x.Orders.Sum(c => c.Total)
 				});
 
 				ObjectDumper.Write($"Show records under {border}");
@@ -84,11 +84,11 @@ namespace SampleQueries
 			var totalBorder = 5000;
 
 			var clients = dataSource.Customers
-				.Where(x => x.Orders.Select(y => y.Total).Sum() > totalBorder)
+				.Where(x => x.Orders.Sum(y => y.Total) > totalBorder)
 				.Select(x => new
 				{
 					CustomerName = x.CustomerID,
-					TotalPrice = x.Orders.Select(c => c.Total).Sum()
+					TotalPrice = x.Orders.Sum(c => c.Total)
 				});
 
 			clients.WriteToApp();
@@ -246,8 +246,8 @@ namespace SampleQueries
 				.Select(x => new
 				{
 					City = x.Key,
-					AverageIncome = x.Where(y => y.Orders.Any()).Select(y => y.Orders.Select(u => u.Total).Sum()).Average(),
-					AverageAmountOfOrders = x.Select(y => y.Orders.Length).Sum() / x.Count()
+					AverageIncome = x.Where(y => y.Orders.Any()).Select(y => y.Orders.Sum(u => u.Total)).Average(),
+					AverageAmountOfOrders = x.Sum(y => y.Orders.Length) / x.Count()
 				});
 
 			averagePricePerCity.WriteToApp();
