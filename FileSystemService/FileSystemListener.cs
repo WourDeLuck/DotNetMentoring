@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using FileSystemService.Common.Helpers;
 using FileSystemService.Common.Models;
 using logging = FileSystemService.Common.Resources.Logging;
@@ -14,18 +15,21 @@ namespace FileSystemService
 	{
 		private FileSystemWatcher _fileSystemWatcher;
 		private readonly IoTools _ioTools;
+
 		private readonly List<AcceptanceRule> _rules;
+		private readonly string _defaultFolder;
 		private readonly CultureInfo _cultureInfo = CultureInfo.CurrentUICulture;
 
-		public FileSystemListener(List<AcceptanceRule> rulesForFiles)
+		public FileSystemListener(List<AcceptanceRule> rulesForFiles, string defaultFolder)
 		{
 			_rules = rulesForFiles;
+			_defaultFolder = defaultFolder;
 			_ioTools = new IoTools();
 		}
 
-		public void Initialize(string folderLink)
+		public async Task Initialize(string folderLink)
 		{
-			Log.Info(logging.InitListener);
+			Log.Info($"{logging.InitListener}: {folderLink}");
 			Guard.ThrowDirectoryExistence(folderLink);
 
 			_fileSystemWatcher = new FileSystemWatcher(folderLink);
@@ -39,6 +43,7 @@ namespace FileSystemService
 			{
 				return;
 			}
+
 			Log.Info($"{logging.FileFound}: {e.Name}");
 
 			var rule = _rules.FirstOrDefault(r => Regex.IsMatch(e.Name, r.FileNamePattern));
@@ -46,6 +51,7 @@ namespace FileSystemService
 			if (rule == null)
 			{
 				Log.Info(logging.RuleNotFound);
+				if (!string.IsNullOrEmpty(_defaultFolder)) _ioTools.MoveFile(e.FullPath, _defaultFolder);
 				return;
 			}
 
