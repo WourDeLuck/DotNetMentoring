@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FileSystemService.Common;
+﻿using System.IO;
+using FileSystemService.Common.Helpers;
+using logging = FileSystemService.Common.Resources.Logging;
 
 namespace FileSystemService
 {
@@ -18,7 +14,7 @@ namespace FileSystemService
 			var newDestinationPath = Path.Combine(destinationFolder, fileName);
 
 			File.Move(filePath, newDestinationPath);
-			Log.Info($"File has been moved to the destination folder: {destinationFolder}");
+			Log.Info($"{logging.FileMoved}: {newDestinationPath}");
 
 			return newDestinationPath;
 		}
@@ -31,9 +27,22 @@ namespace FileSystemService
 			var renamedFilePath = Path.Combine(directory, newFileName);
 			File.Move(filePath, renamedFilePath);
 
-			Log.Info($"File has been renamed: {filePath}");
+			Log.Info($"{logging.FileRenamed}: {renamedFilePath}");
 
 			return renamedFilePath;
+		}
+
+		public int GetFileCount(string filepath)
+		{
+			var filesCount = 0;
+			var directoryName = Path.GetDirectoryName(filepath);
+
+			if (directoryName != null)
+			{
+				filesCount = Directory.GetFiles(directoryName).Length;
+			}
+
+			return filesCount;
 		}
 	}
 }

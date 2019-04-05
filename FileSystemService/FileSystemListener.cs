@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using FileSystemService.Common;
+using FileSystemService.Common.Helpers;
 using FileSystemService.Common.Models;
+using logging = FileSystemService.Common.Resources.Logging;
 
 namespace FileSystemService
 {
@@ -12,7 +14,8 @@ namespace FileSystemService
 	{
 		private FileSystemWatcher _fileSystemWatcher;
 		private readonly IoTools _ioTools;
-		private List<AcceptanceRule> _rules;
+		private readonly List<AcceptanceRule> _rules;
+		private readonly CultureInfo _cultureInfo = CultureInfo.CurrentUICulture;
 
 		public FileSystemListener(List<AcceptanceRule> rulesForFiles)
 		{
@@ -22,37 +25,45 @@ namespace FileSystemService
 
 		public void Initialize(string folderLink)
 		{
-			Log.Info("Initialize File System listener");
+			Log.Info(logging.InitListener);
 			Guard.ThrowDirectoryExistence(folderLink);
 
-			_rules = new List<AcceptanceRule>();
 			_fileSystemWatcher = new FileSystemWatcher(folderLink);
 			_fileSystemWatcher.Changed += OnWatcherChanged;
 			_fileSystemWatcher.EnableRaisingEvents = true;
-			_fileSystemWatcher.IncludeSubdirectories = true;
-
 		}
 
 		private void OnWatcherChanged(object sender, FileSystemEventArgs e)
 		{
-			Log.Info($"New file has been found: {e.Name}");
-
-			//foreach (var rule in _rules)
-			//{
-			// if (!Regex.IsMatch(e.Name, rule.FileNamePattern)) continue;
-
-			// Log.Info($"Rule has been found that matches this file: {rule.FileNamePattern}");
-			// _ioTools.MoveFile(e.FullPath, rule.DestinationFolder);
-			//}
+			if (!File.Exists(e.FullPath))
+			{
+				return;
+			}
+			Log.Info($"{logging.FileFound}: {e.Name}");
 
 			var rule = _rules.FirstOrDefault(r => Regex.IsMatch(e.Name, r.FileNamePattern));
 
-			if (rule == null) return;
+			if (rule == null)
+			{
+				Log.Info(logging.RuleNotFound);
+				return;
+			}
 
-			Log.Info($"Rule has been found that matches this file: {rule.FileNamePattern}");
+			Log.Info($"{logging.RuleFound}: {rule.FileNamePattern}");
 
 			var newPath = _ioTools.MoveFile(e.FullPath, rule.DestinationFolder);
-			var fileWithDate = rule.AddMovementDate ? _ioTools.RenameFile(newPath, $"{DateTime.Now}-{e.Name}") : e.Name;
+
+			if (rule.AddMovementDate)
+			{
+				var dateTime = DateTime.Now.ToString(_cultureInfo.DateTimeFormat);
+				newPath = _ioTools.RenameFile(newPath, $"{dateTime.EscapeDateTimeSymbols()} {Path.GetFileName(newPath)}");
+			}
+
+			if (rule.AddNumber)
+			{
+				var fileCount = _ioTools.GetFileCount(newPath);
+				_ioTools.RenameFile(newPath, $"{fileCount + 1}. {Path.GetFileName(newPath)}");
+			}
 		}
 	}
 }

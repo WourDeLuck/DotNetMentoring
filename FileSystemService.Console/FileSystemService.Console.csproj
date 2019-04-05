@@ -55,6 +55,10 @@
       <Project>{42D0C3EC-F145-4F66-BFB5-6FDE08C7A041}</Project>
       <Name>FileSystemService.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FileSystemService\FileSystemService.csproj">
+      <Project>{EE0323EC-3431-4FAD-8446-4CB9603FC0DA}</Project>
+      <Name>FileSystemService</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

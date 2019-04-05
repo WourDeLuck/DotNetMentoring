@@ -17,5 +17,8 @@ namespace FileSystemService.Common.Models
 			AddItemName = "rule")]
 		[ConfigurationProperty("rules")]
 		public AcceptanceRuleCollection AcceptanceRules => (AcceptanceRuleCollection) this["rules"];
+
+		[ConfigurationProperty("defaultFolder")]
+		public string DefaultFolder => (string)base["defaultFolder"];
 	}
 }
