@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Configuration;
+using System.Globalization;
 
 namespace FileSystemService.Common.Models
 {
-	public class StartSettings
+	public class StartSettings : ConfigurationElement
 	{
-		public string UiCulture { get; set; }
+		[ConfigurationProperty("uiLanguage")]
+		public CultureInfo UiCulture => (CultureInfo) this["uiLanguage"];
 
-		public IList<string> FoldersToListen { get; set; }
+		[ConfigurationProperty("folders")]
+		public FolderCollection FoldersToListen { get; set; }
 
-		public IList<AcceptanceRule> AcceptanceRules { get; set; }
+		[ConfigurationProperty("rules")]
+		public AcceptanceRuleCollection AcceptanceRules => (AcceptanceRuleCollection) this["rules"];
 	}
 }

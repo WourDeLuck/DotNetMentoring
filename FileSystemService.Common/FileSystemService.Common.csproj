@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,8 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Guard.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Models\AcceptanceRule.cs" />
+    <Compile Include="Models\AcceptanceRuleCollection.cs" />
+    <Compile Include="Models\Folder.cs" />
+    <Compile Include="Models\FolderCollection.cs" />
     <Compile Include="Models\StartSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

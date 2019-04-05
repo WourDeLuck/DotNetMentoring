@@ -4,34 +4,36 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FileSystemService.Common;
 
 namespace FileSystemService
 {
 	public class IoTools
 	{
-		public void MoveFile(string filePath, string destinationFolder)
+		public string MoveFile(string filePath, string destinationFolder)
 		{
-			CheckFileExistence(filePath);
+			Guard.ThrowFileExistence(filePath);
 
 			var fileName = Path.GetFileName(filePath);
-			File.Move(filePath, Path.Combine(destinationFolder, fileName));
+			var newDestinationPath = Path.Combine(destinationFolder, fileName);
 
+			File.Move(filePath, newDestinationPath);
+			Log.Info($"File has been moved to the destination folder: {destinationFolder}");
+
+			return newDestinationPath;
 		}
 
-		public void RenameFile(string filePath, string newFileName)
+		public string RenameFile(string filePath, string newFileName)
 		{
-			CheckFileExistence(filePath);
+			Guard.ThrowFileExistence(filePath);
 
 			var directory = Path.GetDirectoryName(filePath);
-			File.Move(filePath, Path.Combine(directory, newFileName));
-		}
+			var renamedFilePath = Path.Combine(directory, newFileName);
+			File.Move(filePath, renamedFilePath);
 
-		private void CheckFileExistence(string filePath)
-		{
-			if (!File.Exists(filePath))
-			{
-				throw new FileNotFoundException($"Specified file not found: {filePath}");
-			}
+			Log.Info($"File has been renamed: {filePath}");
+
+			return renamedFilePath;
 		}
 	}
 }
