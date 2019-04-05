@@ -1,17 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Globalization;
 
 namespace FileSystemService.Common.Models
 {
-	public class StartSettings : ConfigurationElement
+	public class StartSettings : ConfigurationSection
 	{
 		[ConfigurationProperty("uiLanguage")]
-		public CultureInfo UiCulture => (CultureInfo) this["uiLanguage"];
+		public CultureInfo UiCulture => (CultureInfo) base["uiLanguage"];
 
+		[ConfigurationCollection(typeof(Folder),
+			AddItemName = "folder")]
 		[ConfigurationProperty("folders")]
-		public FolderCollection FoldersToListen { get; set; }
+		public FolderCollection FoldersToListen => (FolderCollection) this["folders"];
 
+		[ConfigurationCollection(typeof(AcceptanceRule),
+			AddItemName = "rule")]
 		[ConfigurationProperty("rules")]
 		public AcceptanceRuleCollection AcceptanceRules => (AcceptanceRuleCollection) this["rules"];
 	}

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Configuration;
 
 namespace FileSystemService.Common.Models
 {
 	public class Folder : ConfigurationElement
 	{
-		[ConfigurationProperty("folderPath", IsKey = true)]
-		public string Path { get; set; }
+		[ConfigurationProperty("path", IsKey = true)]
+		public string Path => (string)base["path"];
 	}
 }

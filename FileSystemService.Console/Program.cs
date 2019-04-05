@@ -12,6 +12,9 @@ namespace FileSystemService.Console
 	{
 		static void Main(string[] args)
 		{
+			var d = GetConfiguration();
+
+			System.Console.ReadLine();
 		}
 
 		public static StartSettings GetConfiguration() => (StartSettings)ConfigurationManager.GetSection("startSettings");

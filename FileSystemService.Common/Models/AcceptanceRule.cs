@@ -5,15 +5,15 @@ namespace FileSystemService.Common.Models
 	public class AcceptanceRule : ConfigurationElement
 	{
 		[ConfigurationProperty("pattern", IsKey = true)]
-		public string FileNamePattern { get; set; }
+		public string FileNamePattern => (string)base["pattern"];
 
 		[ConfigurationProperty("destination")]
-		public Folder DestinationFolder { get; set; }
+		public string DestinationFolder => (string)base["destination"];
 
 		[ConfigurationProperty("isAddingNumber")]
-		public bool AddNumber { get; set; }
+		public bool AddNumber => (bool)base["isAddingNumber"];
 
 		[ConfigurationProperty("isAddingDate")]
-		public bool AddMovementDate { get; set; }
+		public bool AddMovementDate => (bool)base["isAddingDate"];
 	}
 }
