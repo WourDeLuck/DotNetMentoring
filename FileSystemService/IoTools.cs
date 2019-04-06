@@ -8,7 +8,7 @@ namespace FileSystemService
 	{
 		public string MoveFile(string filePath, string destinationFolder)
 		{
-			Guard.ThrowFileExistence(filePath);
+			Guard.ThrowIfFileNotExist(filePath);
 
 			var fileName = Path.GetFileName(filePath);
 			var newDestinationPath = Path.Combine(destinationFolder, fileName);
@@ -21,7 +21,7 @@ namespace FileSystemService
 
 		public string RenameFile(string filePath, string newFileName)
 		{
-			Guard.ThrowFileExistence(filePath);
+			Guard.ThrowIfFileNotExist(filePath);
 
 			var directory = Path.GetDirectoryName(filePath);
 			var renamedFilePath = Path.Combine(directory, newFileName);

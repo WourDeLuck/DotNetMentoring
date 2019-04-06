@@ -27,10 +27,10 @@ namespace FileSystemService
 			_ioTools = new IoTools();
 		}
 
-		public async Task Initialize(string folderLink)
+		public void Initialize(string folderLink)
 		{
 			Log.Info($"{logging.InitListener}: {folderLink}");
-			Guard.ThrowDirectoryExistence(folderLink);
+			Guard.ThrowIfDirectoryNotExist(folderLink);
 
 			_fileSystemWatcher = new FileSystemWatcher(folderLink);
 			_fileSystemWatcher.Changed += OnWatcherChanged;
@@ -57,18 +57,25 @@ namespace FileSystemService
 
 			Log.Info($"{logging.RuleFound}: {rule.FileNamePattern}");
 
-			var newPath = _ioTools.MoveFile(e.FullPath, rule.DestinationFolder);
-
-			if (rule.AddMovementDate)
+			try
 			{
-				var dateTime = DateTime.Now.ToString(_cultureInfo.DateTimeFormat);
-				newPath = _ioTools.RenameFile(newPath, $"{dateTime.EscapeDateTimeSymbols()} {Path.GetFileName(newPath)}");
+				var newPath = _ioTools.MoveFile(e.FullPath, rule.DestinationFolder);
+
+				if (rule.AddMovementDate)
+				{
+					var dateTime = DateTime.Now.ToString(_cultureInfo.DateTimeFormat);
+					newPath = _ioTools.RenameFile(newPath, $"{dateTime.EscapeDateTimeSymbols()} {Path.GetFileName(newPath)}");
+				}
+
+				if (rule.AddNumber)
+				{
+					var fileCount = _ioTools.GetFileCount(newPath);
+					_ioTools.RenameFile(newPath, $"{fileCount + 1}. {Path.GetFileName(newPath)}");
+				}
 			}
-
-			if (rule.AddNumber)
+			catch (Exception ex)
 			{
-				var fileCount = _ioTools.GetFileCount(newPath);
-				_ioTools.RenameFile(newPath, $"{fileCount + 1}. {Path.GetFileName(newPath)}");
+				Console.WriteLine(ex.Message);
 			}
 		}
 	}

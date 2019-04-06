@@ -5,7 +5,7 @@ namespace FileSystemService.Common.Helpers
 {
 	public static class Guard
 	{
-		public static void ThrowFileExistence(string filePath)
+		public static void ThrowIfFileNotExist(string filePath)
 		{
 			if (!File.Exists(filePath))
 			{
@@ -13,7 +13,7 @@ namespace FileSystemService.Common.Helpers
 			}
 		}
 
-		public static void ThrowDirectoryExistence(string folderLink)
+		public static void ThrowIfDirectoryNotExist(string folderLink)
 		{
 			if (!Directory.Exists(folderLink))
 			{
