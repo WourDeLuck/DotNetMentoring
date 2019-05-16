@@ -3,7 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsiteSaver", "WebsiteSaver\WebsiteSaver.csproj", "{A70A0393-6063-4918-8F70-59E91C18111D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsiteSaver.Console", "WebsiteSaver.Console\WebsiteSaver.Console.csproj", "{176F3408-06D7-47C5-BF99-05739FF061CE}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A70A0393-6063-4918-8F70-59E91C18111D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A70A0393-6063-4918-8F70-59E91C18111D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A70A0393-6063-4918-8F70-59E91C18111D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A70A0393-6063-4918-8F70-59E91C18111D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{176F3408-06D7-47C5-BF99-05739FF061CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{176F3408-06D7-47C5-BF99-05739FF061CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{176F3408-06D7-47C5-BF99-05739FF061CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{176F3408-06D7-47C5-BF99-05739FF061CE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
