@@ -41,6 +41,7 @@ namespace MvcMusicStore.Controllers
         {
 	        try
 	        {
+				Log.Info("Putting something to the cart");
 		        var cart = ShoppingCart.GetCart(_storeContext, this);
 
 		        await cart.AddToCart(await _storeContext.Albums.SingleAsync(a => a.AlbumId == id));
@@ -100,6 +101,7 @@ namespace MvcMusicStore.Controllers
         {
 	        try
 	        {
+				Log.Info("Getting cart summary");
 		        var cart = ShoppingCart.GetCart(_storeContext, this);
 
 		        var cartItems = cart.GetCartItems()

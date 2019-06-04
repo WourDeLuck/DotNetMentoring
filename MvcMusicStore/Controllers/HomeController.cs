@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace MvcMusicStore.Controllers
 	        try
 	        {
 		        Log.Info("Loading home page");
+				Log.Error("Dummy error message");
 
 		        return View(await _storeContext.Albums
 			        .OrderByDescending(a => a.OrderDetails.Count())

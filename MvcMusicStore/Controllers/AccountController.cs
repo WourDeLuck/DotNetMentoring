@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
@@ -15,6 +16,11 @@ namespace MvcMusicStore.Controllers
     {
 	    private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+	    private PerformanceCounter _totalLogins;
+	    private PerformanceCounter _totalLogoffs;
+	    private PerformanceCounter _avgDuration;
+	    private PerformanceCounter _avgDurationBase;
+
 		public enum ManageMessageId
         {
             ChangePasswordSuccess,
@@ -30,11 +36,13 @@ namespace MvcMusicStore.Controllers
         public AccountController()
             : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
+			SetupCounters();
         }
 
         public AccountController(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
+			SetupCounters();
         }
 
         private IAuthenticationManager AuthenticationManager
@@ -79,6 +87,8 @@ namespace MvcMusicStore.Controllers
         {
 	        try
 	        {
+				var stopwatch = new Stopwatch();
+				stopwatch.Start();
 		        if (ModelState.IsValid)
 		        {
 			        var user = await _userManager.FindAsync(model.UserName, model.Password);
@@ -86,12 +96,18 @@ namespace MvcMusicStore.Controllers
 			        {
 				        await SignInAsync(user, model.RememberMe);
 
+						_totalLogins.Increment();
+
+						Log.Info($"Logging in as {model.UserName}");
 				        return RedirectToLocal(returnUrl);
 			        }
 
 			        ModelState.AddModelError("", "Invalid username or password.");
 		        }
+				stopwatch.Stop();
 
+		        _avgDuration.IncrementBy(stopwatch.ElapsedTicks);
+		        _avgDurationBase.Increment();
 		        return View(model);
 	        }
 	        catch (Exception e)
@@ -124,7 +140,9 @@ namespace MvcMusicStore.Controllers
         {
 	        try
 	        {
-		        if (ModelState.IsValid)
+		        var stopwatch = new Stopwatch();
+		        stopwatch.Start();
+				if (ModelState.IsValid)
 		        {
 			        var user = new ApplicationUser { UserName = model.UserName };
 			        var result = await _userManager.CreateAsync(user, model.Password);
@@ -132,12 +150,17 @@ namespace MvcMusicStore.Controllers
 			        {
 				        await SignInAsync(user, false);
 
+						Log.Info($"User has been created {model.UserName}");
 				        return RedirectToAction("Index", "Home");
 			        }
 
 			        AddErrors(result);
 		        }
 
+				stopwatch.Stop();
+
+		        _avgDuration.IncrementBy(stopwatch.ElapsedTicks);
+		        _avgDurationBase.Increment();
 		        return View(model);
 	        }
 	        catch (Exception e)
@@ -421,6 +444,9 @@ namespace MvcMusicStore.Controllers
 	        {
 		        AuthenticationManager.SignOut();
 
+		        _totalLogoffs.Increment();
+
+				Log.Info($"User logged off");
 		        return RedirectToAction("Index", "Home");
 	        }
 	        catch (Exception e)
@@ -514,6 +540,41 @@ namespace MvcMusicStore.Controllers
                 ? (ActionResult)Redirect(returnUrl)
                 : RedirectToAction("Index", "Home");
         }
+
+	    private void SetupCounters()
+	    {
+		    _totalLogins = new PerformanceCounter
+		    {
+			    CategoryName = "CustomCounters",
+			    CounterName = "# of successfull logins",
+			    MachineName = ".",
+			    ReadOnly = false
+		    };
+
+		    _totalLogoffs = new PerformanceCounter
+		    {
+			    CategoryName = "CustomCounters",
+			    CounterName = "# of successfull logoffs",
+			    MachineName = ".",
+			    ReadOnly = false
+		    };
+
+			_avgDuration = new PerformanceCounter
+			{
+				CategoryName = "CustomCounters",
+				CounterName = "average time per operation",
+				MachineName = ".",
+				ReadOnly = false
+			};
+
+		    _avgDurationBase = new PerformanceCounter
+		    {
+			    CategoryName = "CustomCounters",
+			    CounterName = "average time per operation base",
+			    MachineName = ".",
+			    ReadOnly = false
+		    };
+	    }
 
         private class ChallengeResult : HttpUnauthorizedResult
         {
