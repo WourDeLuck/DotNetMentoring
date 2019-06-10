@@ -10,14 +10,25 @@ namespace WebsiteSaver.Console
 	{
 		static void Main(string[] args)
 		{
-			var gh = new WebsiteProcessor();
+			try
+			{
+				var gh = new WebsiteProcessor();
+				var uri = "https://www.google.com/";
 
-			var folderToSaveTo = @"C:\Users\thesa\Documents\Proc";
-			var uri = "https://www.google.com/";
+				gh.GetPage(uri, @"C:\Users\Anastasiya_Trayanava\Documents\TestFolder");
 
-			gh.DownloadWebsite(uri, folderToSaveTo);
+				System.Console.ReadLine();
+			}
+			catch (Exception e)
+			{
+				System.Console.WriteLine(e);
+			}
+			//var folderToSaveTo = @"C:\Users\thesa\Documents\Proc";
+			//var uri = "https://www.google.com/";
 
-			System.Console.ReadLine();
+			//gh.DownloadWebsite(uri, folderToSaveTo);
+
+			//System.Console.ReadLine();
 		}
 	}
 }
