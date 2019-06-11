@@ -36,7 +36,7 @@ namespace MvcMusicStore.Console
 			System.Console.WriteLine($"Logs of level {levelName}:");
 			while (!results.atEnd())
 			{
-				System.Console.WriteLine($"{results.getRecord().getValue("DateTime")} {results.getRecord().getValue("Domain")} {results.getRecord().getValue("Message")}");
+				System.Console.WriteLine($"{results.getRecord().getValue("DateTime")} {results.getRecord().getValue("Message")}");
 				results.moveNext();
 			}
 		}
