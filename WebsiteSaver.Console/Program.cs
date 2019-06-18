@@ -12,7 +12,7 @@ namespace WebsiteSaver.Console
 		{
 			try
 			{
-				var gh = new WebsiteProcessor();
+				var gh = new WebsiteSaver.WebsiteProcessor();
 				var uri = "https://www.google.com/";
 
 				gh.GetPage(uri, @"C:\Users\Anastasiya_Trayanava\Documents\TestFolder");
