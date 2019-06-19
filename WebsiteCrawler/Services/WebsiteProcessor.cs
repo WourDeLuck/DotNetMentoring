@@ -4,17 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
 using AngleSharp;
 using AngleSharp.Dom;
-using AngleSharp.Html.Dom;
-using WebsiteSaver.Enums;
-using WebsiteSaver.Helpers;
+using WebsiteCrawler.Helpers;
 
-namespace WebsiteSaver
+namespace WebsiteCrawler.Services
 {
-	public class WebsiteProcessor
-	{
+    public class WebsiteProcessor
+    {
 		//key - web link, value - local link
 		private Dictionary<string, string> _linkContainer = new Dictionary<string, string>();
 		private HttpClient _client = new HttpClient();

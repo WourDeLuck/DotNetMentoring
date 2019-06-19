@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebsiteSaver.Enums
+namespace WebsiteCrawler.Enums
 {
 	public enum DomainLimitEnum
 	{

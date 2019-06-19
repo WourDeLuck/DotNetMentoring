@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WebsiteSaver.Console")]
+[assembly: AssemblyTitle("WebsiteCrawler")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("WebsiteSaver.Console")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCompany("EPAM Systems")]
+[assembly: AssemblyProduct("WebsiteCrawler")]
+[assembly: AssemblyCopyright("Copyright © EPAM Systems 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ed9e72a8-7836-4ec0-9efd-162affeb5cfa")]
+[assembly: Guid("397a362b-c2fa-4130-8f8e-fe847bef2578")]
 
 // Version information for an assembly consists of the following four values:
 //

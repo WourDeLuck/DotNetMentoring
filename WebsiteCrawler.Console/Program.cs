@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebsiteCrawler.Services;
 
-namespace WebsiteSaver.Console
+namespace WebsiteCrawler.Console
 {
 	class Program
 	{
@@ -12,7 +13,7 @@ namespace WebsiteSaver.Console
 		{
 			try
 			{
-				var gh = new WebsiteSaver.WebsiteProcessor();
+				var gh = new WebsiteProcessor();
 				var uri = "https://www.google.com/";
 
 				gh.GetPage(uri, @"C:\Users\Anastasiya_Trayanava\Documents\TestFolder");
