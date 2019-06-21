@@ -7,10 +7,11 @@ using System.Net.Http;
 using AngleSharp;
 using AngleSharp.Dom;
 using WebsiteCrawler.Helpers;
+using WebsiteCrawler.Interfaces;
 
 namespace WebsiteCrawler.Services
 {
-    public class WebsiteProcessor
+    public class WebsiteProcessor : IWebsiteProcessor
     {
 		//key - web link, value - local link
 		private Dictionary<string, string> _linkContainer = new Dictionary<string, string>();

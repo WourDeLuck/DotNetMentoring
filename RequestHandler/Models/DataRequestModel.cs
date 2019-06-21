@@ -5,7 +5,7 @@ using System.Web;
 
 namespace RequestHandler.Models
 {
-	public class CustomerOrdersModel
+	public class DataRequestModel
 	{
 		public string Id { get; set; }
 
@@ -13,7 +13,7 @@ namespace RequestHandler.Models
 
 		public DateTime? DateTo { get; set; }
 
-		public int Take { get; set; }
+		public int? Take { get; set; }
 
 		public int Skip { get; set; }
 	}
