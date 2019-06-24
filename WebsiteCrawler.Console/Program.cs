@@ -16,7 +16,7 @@ namespace WebsiteCrawler.Console
 				var gh = new WebsiteProcessor();
 				var uri = "https://www.google.com/";
 
-				gh.GetPage(uri, @"C:\Users\Anastasiya_Trayanava\Documents\TestFolder");
+				gh.GetPage(uri, @"D:\KK");
 
 				System.Console.ReadLine();
 			}
@@ -24,12 +24,6 @@ namespace WebsiteCrawler.Console
 			{
 				System.Console.WriteLine(e);
 			}
-			//var folderToSaveTo = @"C:\Users\thesa\Documents\Proc";
-			//var uri = "https://www.google.com/";
-
-			//gh.DownloadWebsite(uri, folderToSaveTo);
-
-			//System.Console.ReadLine();
 		}
 	}
 }
