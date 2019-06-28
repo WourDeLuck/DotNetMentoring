@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WebsiteCrawler.Interfaces
+﻿namespace WebsiteCrawler.Interfaces
 {
-	interface IWebsiteProcessor
+	public interface IWebsiteProcessor
 	{
+		void DownloadWebsite(string uri, string localFolderPath, int depth = 0);
 	}
 }

@@ -4,8 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Dom;
+using WebsiteCrawler.Enums;
+using WebsiteCrawler.Extensions;
 using WebsiteCrawler.Helpers;
 using WebsiteCrawler.Interfaces;
 
@@ -14,37 +17,55 @@ namespace WebsiteCrawler.Services
     public class WebsiteProcessor : IWebsiteProcessor
     {
 		//key - web link, value - local link
-		private Dictionary<string, string> _linkContainer = new Dictionary<string, string>();
-		private HttpClient _client = new HttpClient();
+		private Dictionary<string, string> _linkContainer;
+		private HttpClient _client;
+	    private IFileService _fileService;
+	    private string _domain;
 
-		//public DomainLimitEnum VisitOtherDomains { get; set; }
-		//public List<string> AllowedFormats { get; set; }
+		public DomainLimitEnum VisitOtherDomains { get; set; }
+		public List<string> AllowedFormats { get; set; }
 
-		public void DownloadWebsite(string uri, string localFolderPath, int depth = 0)
+	    public WebsiteProcessor()
+	    {
+		    _linkContainer = new Dictionary<string, string>();
+			_client = new HttpClient();
+			_fileService = new FileService();
+			AllowedFormats = new List<string>();
+		    VisitOtherDomains = DomainLimitEnum.NoLimit;
+	    }
+
+		public async void DownloadWebsite(string uri, string localFolderPath, int depth = 0)
 		{
 			Log.Info($"Website downloading has started: {uri}");
 
-			if (!Directory.Exists(localFolderPath))
-			{
-				throw new ArgumentException("Specified path wasn't found.");
-			}
+			Guard.ThrowIfDirectoryNotExist(localFolderPath);
+			Guard.ThrowIfStringIsNullOrEmpty(uri);
+			Guard.ThrowIfUriIsInvalid(uri);
 
 			var parsedUri = new Uri(uri);
-			var websiteFolderPath = Path.Combine(localFolderPath, parsedUri.Host);
+			_domain = parsedUri.Host;
+			var websiteFolderPath = Path.Combine(localFolderPath, _domain.ToSafeFileName());
 
-			Directory.CreateDirectory(websiteFolderPath);
+			_fileService.CreateDirectory(websiteFolderPath);
 
-			GetPage(uri, websiteFolderPath);
+			if (VisitOtherDomains == DomainLimitEnum.InsideOriginalUrlOnly) depth = 0;
+
+			await GetPage(uri, websiteFolderPath, depth);
+
+			UpdateLinksInFiles(websiteFolderPath);
 		}
 
-		public async void GetPage(string uri, string folderToSave, int depth = 0)
+		private async Task GetPage(string uri, string folderToSave, int depth = 0)
 		{
 			Log.Info($"Retrieving a web page: {uri}");
 
-			//change to HTTPClient
-			//var config = Configuration.Default.WithDefaultLoader();
-			//var context = BrowsingContext.New(config);
-			//var document = await context.OpenAsync(uri);
+			if (!IsValidUri(uri)) return;
+
+			if (VisitOtherDomains == DomainLimitEnum.InsideCurrentDomainOnly)
+			{
+				var validateUri = new Uri(uri).Host;
+				if (!validateUri.Equals(_domain)) return;
+			}
 
 			var result = await _client.GetAsync(uri);
 			var responseContent = await result.Content.ReadAsStringAsync();
@@ -57,19 +78,19 @@ namespace WebsiteCrawler.Services
 			var pageTitle = document.Title;
 
 			// create files directory
-			var pageFilesPath = Path.Combine(folderToSave, $"{pageTitle}_files");
-			Directory.CreateDirectory(pageFilesPath);
+			var pageFilesPath = Path.Combine(folderToSave, $"{pageTitle}_files".ToSafeFileName());
+			Log.Info($"Creating a content folder of the web page: {pageFilesPath}");
+			_fileService.CreateDirectory(pageFilesPath);
 
 			Log.Info($"Retrieving files related to {uri}");
 			DownloadFiles(document, pageFilesPath, uri);
 
-			var mainPageLink = Path.Combine(folderToSave, $"{pageTitle}.html");
+			var mainPageLink = Path.Combine(folderToSave, $"{pageTitle}.html".ToSafeFileName());
 
-			using (TextWriter writer = File.CreateText(mainPageLink))
-			{
-				Log.Info($"Saving web page to {mainPageLink}");
-				document.ToHtml(writer);
-			}
+			Log.Info($"Saving the web page {mainPageLink}");
+			_fileService.SaveToHtmlFile(mainPageLink, document);
+
+			UpdateLinkContainer(uri, mainPageLink);
 
 			if (depth <= 0) return;
 
@@ -78,13 +99,15 @@ namespace WebsiteCrawler.Services
 				.Select(x => x.Attributes["href"].Value)
 				.ToList();
 
+			depth--;
+
 			foreach (var node in links)
 			{
-				GetPage(node, folderToSave, depth--);
+				await GetPage(node, folderToSave, depth);
 			}
 		}
 
-		private void DownloadFiles(IDocument htmlPage, string pageFilesFolderPath, string uri)
+	    private void DownloadFiles(IDocument htmlPage, string pageFilesFolderPath, string uri)
 		{
 			var selectors = htmlPage.All.Where(x => x.HasAttribute("src")).ToList();
 
@@ -99,7 +122,9 @@ namespace WebsiteCrawler.Services
 					var fileUrl = new Uri(new Uri(uri), srcValue);
 					var filename = Path.GetFileName(fileUrl.AbsolutePath);
 
-					var downloadedFilePath = Path.Combine(pageFilesFolderPath, filename);
+					var downloadedFilePath = Path.Combine(pageFilesFolderPath, filename.ToSafeFileName());
+
+					if (!AllowedFormats.Contains(Path.GetExtension(downloadedFilePath))) continue;
 					webClient.DownloadFile(fileUrl, downloadedFilePath);
 
 					node.SetAttribute("src", downloadedFilePath);
@@ -116,12 +141,52 @@ namespace WebsiteCrawler.Services
 			}
 		}
 
-		//private void UpdateRelatedLinks(IDocument htmlPage)
-		//{
-		//	var selector = "a";
+	    private async void UpdateLinksInFiles(string localWebSiteFolder)
+	    {
+			Log.Info("Updating links in folder:");
+		    Guard.ThrowIfDirectoryNotExist(localWebSiteFolder);
 
-		//	var items = htmlPage.QuerySelectorAll(selector);
-		//	//var links = items.Select(x => (IHtmlAnchorElement) x.Href )
-		//}
+		    var htmlFilesCollection = _fileService.GetFiles(localWebSiteFolder).Where(x => Path.GetExtension(x).Equals(".html")).ToList();
+
+			foreach (var file in htmlFilesCollection)
+			{
+				Log.Info($"Processing {file}");
+			    var fileContent = _fileService.ReadText(file);
+
+				var config = Configuration.Default.WithDefaultLoader();
+			    var context = BrowsingContext.New(config);
+
+			    var document = await context.OpenAsync(req => req.Content(fileContent));
+
+			    var nodes = document
+				    .QuerySelectorAll("a").Where(x => x.HasAttribute("href")).ToList();
+
+			    foreach (var node in nodes)
+			    {
+				    var href = node.GetAttribute("href");
+
+				    if (_linkContainer.ContainsKey(href))
+				    {
+					    node.SetAttribute("href", _linkContainer[href]);
+				    }
+			    }
+
+				_fileService.SaveToHtmlFile(file, document);
+			}
+	    }
+
+	    private bool IsValidUri(string uri)
+	    {
+		    try
+		    {
+			    var url = new Uri(uri);
+			    return true;
+		    }
+		    catch (Exception e)
+		    {
+			    Log.Error(e.Message);
+			    return false;
+		    }
+	    }
 	}
 }

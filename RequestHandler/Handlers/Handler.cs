@@ -90,8 +90,8 @@ namespace RequestHandler.Handlers
 			var accept = context.Request.ContentType;
 
 			var creator = accept.Equals("text/xml") || accept.Equals("application/xml")
-				? (IResponseCreator) new XmlCreator()
-				: (IResponseCreator) new ExcelCreator();
+				? new XmlCreator() as IResponseCreator
+				: new ExcelCreator() as IResponseCreator;
 
 			creator.CreateResponse(data, context.Response);
 		}

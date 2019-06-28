@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsiteCrawler.Console", "W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequestHandler", "RequestHandler\RequestHandler.csproj", "{A44389E9-166B-4969-941D-C05D525D1599}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequestHandler.Tests", "RequestHandler.Tests\RequestHandler.Tests.csproj", "{C35C8D12-0A3C-4D78-BB86-63CD2AC94C4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A44389E9-166B-4969-941D-C05D525D1599}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A44389E9-166B-4969-941D-C05D525D1599}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A44389E9-166B-4969-941D-C05D525D1599}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C35C8D12-0A3C-4D78-BB86-63CD2AC94C4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C35C8D12-0A3C-4D78-BB86-63CD2AC94C4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C35C8D12-0A3C-4D78-BB86-63CD2AC94C4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C35C8D12-0A3C-4D78-BB86-63CD2AC94C4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AngleSharp.Dom;
 
 namespace WebsiteCrawler.Interfaces
 {
-	interface IFileService
+	public interface IFileService
 	{
+		void CreateDirectory(string folderPath);
+
+		void SaveToHtmlFile(string fileLink, IDocument document);
+
+		string[] GetFiles(string folderPath);
+
+		string ReadText(string filePath);
 	}
 }

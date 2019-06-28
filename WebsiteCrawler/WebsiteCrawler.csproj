@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\DomainLimitEnum.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Helpers\Guard.cs" />
     <Compile Include="Helpers\Log.cs" />
     <Compile Include="Interfaces\IFileService.cs" />
