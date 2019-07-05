@@ -59,7 +59,7 @@ namespace WebsiteCrawler.Services
 		{
 			Log.Info($"Retrieving a web page: {uri}");
 
-			if (!IsValidUri(uri)) return;
+			if (!Guard.IsValidUri(uri)) return;
 
 			if (VisitOtherDomains == DomainLimitEnum.InsideCurrentDomainOnly)
 			{
@@ -173,20 +173,6 @@ namespace WebsiteCrawler.Services
 
 				_fileService.SaveToHtmlFile(file, document);
 			}
-	    }
-
-	    private bool IsValidUri(string uri)
-	    {
-		    try
-		    {
-			    var url = new Uri(uri);
-			    return true;
-		    }
-		    catch (Exception e)
-		    {
-			    Log.Error(e.Message);
-			    return false;
-		    }
 	    }
 	}
 }

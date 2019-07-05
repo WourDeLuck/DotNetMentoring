@@ -37,5 +37,19 @@ namespace WebsiteCrawler.Helpers
 				throw new ArgumentException("Specified file wasn't found");
 			}
 		}
+
+		public static bool IsValidUri(string uri)
+		{
+			try
+			{
+				var url = new Uri(uri);
+				return true;
+			}
+			catch (Exception e)
+			{
+				Log.Error(e.Message);
+				return false;
+			}
+		}
 	}
 }
