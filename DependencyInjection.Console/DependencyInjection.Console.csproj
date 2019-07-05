@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D1BA5CE1-033D-49D9-8829-E0B42016EC4C}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DependencyInjection</RootNamespace>
-    <AssemblyName>DependencyInjection</AssemblyName>
+    <ProjectGuid>{382DAD36-A42C-40F4-9982-A2DF35ACF753}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>DependencyInjection.Console</RootNamespace>
+    <AssemblyName>DependencyInjection.Console</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,18 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\DependencyAttribute.cs" />
-    <Compile Include="Attributes\ExportAttribute.cs" />
-    <Compile Include="Attributes\ImportPropertyAttribute.cs" />
-    <Compile Include="Attributes\ImportConstructorAttribute.cs" />
-    <Compile Include="Enums\DependencyEnum.cs" />
-    <Compile Include="Enums\ObjectType.cs" />
-    <Compile Include="Helpers\TypeGuard.cs" />
-    <Compile Include="IContainer.cs" />
-    <Compile Include="Models\RegisteredObject.cs" />
-    <Compile Include="SimpleContainer.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DependencyInjection\DependencyInjection.csproj">
+      <Project>{d1ba5ce1-033d-49d9-8829-e0b42016ec4c}</Project>
+      <Name>DependencyInjection</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

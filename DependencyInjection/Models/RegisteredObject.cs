@@ -3,42 +3,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DependencyInjection.Enums;
 
 namespace DependencyInjection.Models
 {
 	public class RegisteredObject
 	{
+		public DependencyEnum ObjectType { get; set; }
+
+		public Type ConcreteType { get; set; } 
+
 		public Type Type { get; set; }
 
-		public Type Concrete { get; set; }
+		public object Instance { get; set; }
 
-		public string LifeCycle { get; set; }
-
-		public RegisteredObject(Type type, Type concrete)
+		public RegisteredObject(Type concrete, Type type)
 		{
+			ConcreteType = concrete;
 			Type = type;
-			Concrete = concrete;
 		}
 
-		public RegisteredObject(Type type, Type concrete, string lifeCycle)
+		public RegisteredObject(Type concrete)
 		{
-			Type = type;
-			Concrete = concrete;
-			LifeCycle = lifeCycle;
+			ConcreteType = concrete;
 		}
 
 		public override bool Equals(object obj)
 		{
 			return obj is RegisteredObject @object &&
-			       EqualityComparer<Type>.Default.Equals(Type, @object.Type) &&
-			       EqualityComparer<Type>.Default.Equals(Concrete, @object.Concrete);
+				   EqualityComparer<Type>.Default.Equals(ConcreteType, @object.ConcreteType) &&
+				   EqualityComparer<Type>.Default.Equals(Type, @object.Type);
 		}
 
 		public override int GetHashCode()
 		{
-			var hashCode = 307679827;
+			var hashCode = -1155721637;
+			hashCode = hashCode * -1521134295 + EqualityComparer<Type>.Default.GetHashCode(ConcreteType);
 			hashCode = hashCode * -1521134295 + EqualityComparer<Type>.Default.GetHashCode(Type);
-			hashCode = hashCode * -1521134295 + EqualityComparer<Type>.Default.GetHashCode(Concrete);
 			return hashCode;
 		}
 	}
