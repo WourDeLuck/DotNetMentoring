@@ -91,28 +91,28 @@ namespace DependencyInjection
 
 	    private object ResolveConstructor(Type concrete)
 	    {
-			var constructor = concrete.GetConstructors().First();
-			var parameterTypes = constructor.GetParameters().Select(p => p.ParameterType).ToList();
+			var constructor = concrete.GetConstructors().FirstOrDefault();
 
-			if (!parameterTypes.Any())
-			{
-				return Activator.CreateInstance(concrete);
-			}
+		    if (constructor == null) throw new ArgumentException("There is no public constructors for this type.");
 
-			var dependencies = parameterTypes.Select(ResolveConstructor);
+		    var parameterTypes = constructor.GetParameters().Select(p => p.ParameterType).ToList();
 
-			return Activator.CreateInstance(concrete, dependencies);
-		}
+		    if (!parameterTypes.Any())
+		    {
+			    return Activator.CreateInstance(concrete);
+		    }
+
+		    var dependencies = parameterTypes.Select(ResolveConstructor).ToArray();
+
+		    return Activator.CreateInstance(concrete, dependencies);
+	    }
 
 	    private object ResolveProperties(Type concrete)
 	    {
-			// create instance
-		    //var instance = ResolveConstructor(concrete);
-
 		    var instance = Activator.CreateInstance(concrete);
 
 			// get properties
-			var properties = concrete.GetProperties().Where(x => Attribute.IsDefined(x, typeof(DependencyAttribute))); //.Select(p => p.PropertyType);
+			var properties = concrete.GetProperties().Where(x => Attribute.IsDefined(x, typeof(DependencyAttribute)));
 			
 		    foreach (var prop in properties)
 		    {
