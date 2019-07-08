@@ -11,7 +11,7 @@ namespace DependencyInjection.Console
 		static void Main(string[] args)
 		{
 			var container = new SimpleContainer();
-			container.AddType
+			//container.AddType
 		}
 	}
 
