@@ -12,7 +12,19 @@ namespace DependencyInjection.Helpers
 		public static void CheckAttributeUniqueness(Type typeToCheck)
 		{
 			var typeAttribute = (DependencyAttribute)Attribute.GetCustomAttribute(typeToCheck, typeof(DependencyAttribute));
-			var properties = typeToCheck.GetProperties();
+			var properties = typeToCheck.GetProperties().Where(x => Attribute.IsDefined(x, typeof(DependencyAttribute)));
+
+			//if (typeAttribute.)
+		}
+
+		private static void CheckIfClassAttributeIsImportConstructor()
+		{
+			
+		}
+
+		public static void CheckIfPropertyAttributeIsImport()
+		{
+			
 		}
 	}
 }

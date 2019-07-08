@@ -19,10 +19,10 @@ namespace DependencyInjection
 
 		void AddType(Type concrete, Type type);
 
-		void AddAssemnly(Assembly executingAssembly);
+		void AddAssembly(Assembly executingAssembly);
 
 		object CreateInstance(Type concrete);
 
-		object CreateInstance<TConcrete>();
+		TConcrete CreateInstance<TConcrete>();
 	}
 }

@@ -12,11 +12,13 @@ namespace DependencyInjection
 {
     public class SimpleContainer : IContainer
     {
+		// I am getting confused a lot, but type is Type and concrete type is its implementation.
 		private IList<RegisteredObject> _registeredObjects = new List<RegisteredObject>();
 
+		// register
 		public void AddType(Type concrete)
 		{
-			// attribute validation
+			// TODO: attribute validation
 
 			var registeredObject = new RegisteredObject(concrete);
 
@@ -25,9 +27,10 @@ namespace DependencyInjection
 			_registeredObjects.Add(registeredObject);
 		}
 
+		// register
 	    public void AddType(Type concrete, Type type)
 	    {
-			// attribute validation
+			// TODO: attribute validation
 
 		    var registeredObject = new RegisteredObject(concrete, type);
 
@@ -36,114 +39,90 @@ namespace DependencyInjection
 			_registeredObjects.Add(registeredObject);
 		}
 
-	    public void AddAssemnly(Assembly executingAssembly)
+		// register
+	    public void AddAssembly(Assembly executingAssembly)
 	    {
 			var types = GetAssemblyTypes(executingAssembly);
+
+		    foreach (var type in types)
+		    {
+			    AddType(type);
+		    }
 	    }
 
-
+		// resolve
 	    public object CreateInstance(Type concrete)
 	    {
-		    var registeredObject = _registeredObjects.First(x => x.ConcreteType == concrete);
+		    return ResolveType(concrete);
+	    }
+
+		// resolve
+	    public TConcrete CreateInstance<TConcrete>()
+	    {
+		    return (TConcrete) ResolveType(typeof(TConcrete));
+	    }
+
+	    private object ResolveType(Type type)
+	    {
 		    object instance = null;
 
-		    var attribute = (DependencyAttribute) Attribute.GetCustomAttribute(concrete, typeof(DependencyAttribute));
+			var registeredObject = _registeredObjects.First(x => x.ConcreteType == type);
+		    if (registeredObject.Instance != null)
+		    {
+			    return registeredObject.Instance;
+		    }
+
+			var attribute = (DependencyAttribute)Attribute.GetCustomAttribute(type, typeof(DependencyAttribute));
 		    if (attribute.DependencyType == ObjectType.ImportConstructor)
 		    {
-			    instance = ResolveConstructor(concrete);
+			    instance = ResolveConstructor(type);
 		    }
-		    else
+		    else if (attribute.DependencyType == ObjectType.ImportProperty)
 		    {
-			    var properties = concrete.GetProperties().Where(x => Attribute.IsDefined(x, typeof(DependencyAttribute)));
+			    instance = ResolveProperties(type);
 		    }
 
 		    registeredObject.Instance = instance;
 
 		    return instance;
-	    }
-
-	    public object CreateInstance<TConcrete>()
-	    {
-		    throw new NotImplementedException();
-	    }
+		}
 
 		private static IEnumerable<Type> GetAssemblyTypes(Assembly assembly) => assembly.GetTypes().Where(type => Attribute.IsDefined(type, typeof(DependencyAttribute)));
 
 	    private object ResolveConstructor(Type concrete)
 	    {
-			//  object instance = null;
-			//  var constructor = concrete.GetConstructors().FirstOrDefault();
-			//  if (constructor != null)
-			//  {
-			//   var parameters = constructor.GetParameters();
-			//instance = Activator.CreateInstance()
-			//  }
+			var constructor = concrete.GetConstructors().First();
+			var parameterTypes = constructor.GetParameters().Select(p => p.ParameterType).ToList();
 
-		    object instance = null;
-
-			var constructor = concrete.GetConstructors().FirstOrDefault();
-			var constructorProperties = constructor.GetParameters();
-
-			IList<ParameterInfo> parametersToResolve = new List<ParameterInfo>();
-			foreach (var p in constructorProperties)
+			if (!parameterTypes.Any())
 			{
-				var regObj = new RegisteredObject(p.ParameterType);
-				if (_registeredObjects.Contains(regObj))
-				{
-					parametersToResolve.Add(p);
-				}
+				return Activator.CreateInstance(concrete);
 			}
 
-			//var constructor = concrete.GetConstructors().FirstOrDefault();
+			var dependencies = parameterTypes.Select(ResolveConstructor);
 
-			//if (constructor != null)
-			//{
-			// var parameters = constructor.GetParameters()
-			//  .Select(parameter => ResolveConstructor(parameter.ParameterType))
-			//  .ToArray();
-
-			// instance = Activator.CreateInstance(concrete, parameters);
-			//}
-			return instance;
+			return Activator.CreateInstance(concrete, dependencies);
 		}
 
 	    private object ResolveProperties(Type concrete)
 	    {
-		    object instance = null;
+			// create instance
+		    //var instance = ResolveConstructor(concrete);
 
-		    var properties = concrete.GetProperties().Where(x => Attribute.IsDefined(x, typeof(DependencyAttribute)));
+		    var instance = Activator.CreateInstance(concrete);
 
+			// get properties
+			var properties = concrete.GetProperties().Where(x => Attribute.IsDefined(x, typeof(DependencyAttribute))); //.Select(p => p.PropertyType);
+			
+		    foreach (var prop in properties)
+		    {
+			    var registeredObject = _registeredObjects.First(x => x.ConcreteType == prop.PropertyType);
+			    var ins = registeredObject.Instance ?? ResolveConstructor(prop.PropertyType);
+			    registeredObject.Instance = ins;
+				prop.SetValue(instance, registeredObject.Instance);
+		    }
 
 		    return instance;
-	    }
-
-	    private object ResolveParameterInstance(Type concrete)
-	    {
-		    var registeredType = _registeredObjects.First(x => x.ConcreteType == concrete);
-
-		    if (registeredType != null && registeredType.Instance != null)
-		    {
-			    return registeredType.Instance;
-		    }
-		    else
-		    {
-				var constructor = concrete.GetConstructors().FirstOrDefault();
-
-				if (constructor != null)
-				{
-					var parameters = constructor.GetParameters()
-						.Select(parameter => ResolveParameterInstance(parameter.ParameterType))
-						.ToArray();
-
-					var instance = Activator.CreateInstance(concrete, parameters);
-					registeredType.Instance = instance;
-					return instance;
-				}
-				else
-				{
-					throw new ArgumentException();
-				}
-			}
 	    }
 
 	    //private ConstructorInfo SelectConstructor(Type type)
