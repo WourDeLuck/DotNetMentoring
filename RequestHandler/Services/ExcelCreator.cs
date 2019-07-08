@@ -15,12 +15,13 @@ namespace RequestHandler.Services
 			var workbook = new XLWorkbook();
 			var ws = workbook.Worksheets.Add("Report");
 
-			ws.Cell(1, 1).Value = "OrderID";
-			ws.Cell(1, 2).Value = "Customer Name";
-			ws.Cell(1, 3).Value = "Order Date";
-			ws.Cell(1, 4).Value = "Products";
-			ws.Cell(1, 5).Value = "Address";
-			ws.Cell(1, 6).Value = "Total";
+			var list = data.First().GetType().GetProperties();
+			var headers = list.Select(x => x.Name).ToList();
+
+			for (var i = 0; i < headers.Count; i++)
+			{
+				ws.Cell(1, i + 1).Value = headers[i];
+			}
 
 			var query = data.Select(x => new
 			{

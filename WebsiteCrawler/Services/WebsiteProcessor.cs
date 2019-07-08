@@ -18,8 +18,8 @@ namespace WebsiteCrawler.Services
     {
 		//key - web link, value - local link
 		private Dictionary<string, string> _linkContainer;
-		private HttpClient _client;
-	    private IFileService _fileService;
+		private readonly HttpClient _client;
+	    private readonly IFileService _fileService;
 	    private string _domain;
 
 		public DomainLimitEnum VisitOtherDomains { get; set; }
@@ -50,12 +50,12 @@ namespace WebsiteCrawler.Services
 
 			if (VisitOtherDomains == DomainLimitEnum.InsideOriginalUrlOnly) depth = 0;
 
-			await GetPage(uri, websiteFolderPath, depth);
+			await GetPageAsync(uri, websiteFolderPath, depth);
 
 			UpdateLinksInFiles(websiteFolderPath);
 		}
 
-		private async Task GetPage(string uri, string folderToSave, int depth = 0)
+		private async Task GetPageAsync(string uri, string folderToSave, int depth = 0)
 		{
 			Log.Info($"Retrieving a web page: {uri}");
 
@@ -103,7 +103,7 @@ namespace WebsiteCrawler.Services
 
 			foreach (var node in links)
 			{
-				await GetPage(node, folderToSave, depth);
+				await GetPageAsync(node, folderToSave, depth);
 			}
 		}
 
